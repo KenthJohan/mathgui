@@ -1,0 +1,15 @@
+#version 330 core
+
+out vec4 fragcolor;
+in vec4 color;
+
+void main()
+{
+	fragcolor = color;
+	/*
+	fragcolor.r = 0.1;
+	fragcolor.g = 0.1;
+	fragcolor.b = 0.8;
+	fragcolor.a = 1.0;
+	*/
+}

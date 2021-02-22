@@ -1,0 +1,13 @@
+#version 330 core
+layout (location = 0) in vec4 vpos;
+layout (location = 1) in vec2 vtex;
+
+out vec3 texcoord;
+uniform mat4 mvp;
+
+void main()
+{
+	gl_Position = mvp * vec4(vpos.xyz, 1.0);
+	texcoord = vec3(vtex.x, vtex.y, vpos.w);
+}
+
