@@ -1,0 +1,3 @@
+[submodule "mathgui/csc"]
+	path = mathgui/csc
+	url = https://github.com/KenthJohan/csc

@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-DEFINES += CSC_SRCDIR=\\\"../demo3/\\\"
+DEFINES += CSC_SRCDIR=\\\"../mathgui/\\\"
 #DEFINES += DEBUG
 
 HEADERS += csc/csc_math.h
