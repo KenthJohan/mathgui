@@ -9,7 +9,50 @@
 #include "csc/csc_qf32.h"
 
 
-#include "components.h"
+#include "mg_comp.h"
+
+//OpenGL:
+ECS_COMPONENT_DECLARE (component_tbo);
+ECS_COMPONENT_DECLARE (component_vbo);
+ECS_COMPONENT_DECLARE (component_vao);
+ECS_COMPONENT_DECLARE (component_va);
+ECS_COMPONENT_DECLARE (component_pointcloud);
+ECS_COMPONENT_DECLARE (component_mesh);
+
+//Misc:
+ECS_COMPONENT_DECLARE (component_stride);
+ECS_COMPONENT_DECLARE (component_count);
+ECS_COMPONENT_DECLARE (component_texture);
+ECS_COMPONENT_DECLARE (component_color);
+ECS_COMPONENT_DECLARE (component_position);
+ECS_COMPONENT_DECLARE (component_scale);
+ECS_COMPONENT_DECLARE (component_quaternion);
+ECS_COMPONENT_DECLARE (component_uv);
+ECS_COMPONENT_DECLARE (component_rectangle);
+ECS_COMPONENT_DECLARE (component_transform);
+
+//Input control:
+ECS_COMPONENT_DECLARE (component_controller);
+
+//Application:
+ECS_COMPONENT_DECLARE (component_applyrotation);
+
+enum glprogram_type
+{
+	GLPROGRAM_POINT,
+	GLPROGRAM_LINE,
+	GLPROGRAM_MESH,
+	GLPROGRAM_COUNT,
+};
+
+enum gluniform_type
+{
+	GLUNIFORM_POINT_MVP,
+	GLUNIFORM_LINE_MVP,
+	GLUNIFORM_MESH_MVP,
+	GLUNIFORM_MESH_TEX0,
+	GLUNIFORM_COUNT,
+};
 
 static GLint global_glprogram[GLPROGRAM_COUNT];
 static GLint global_gluniform[GLUNIFORM_COUNT];
@@ -283,6 +326,31 @@ static void system_mesh_draw (ecs_iter_t *it)
 
 
 
+static void system_mesh_draw1 (ecs_iter_t *it)
+{
+	ECS_COLUMN (it, component_mesh, img, 1);//Shared
+	ECS_COLUMN (it, component_count, count, 2);//Shared
+	ECS_COLUMN (it, component_vao, vao, 3);//Shared
+	ECS_COLUMN (it, component_tbo, tbo, 4);//Shared
+	ECS_COLUMN (it, component_transform, t, 5);
+	glActiveTexture (GL_TEXTURE0);
+	glBindTexture (GL_TEXTURE_2D_ARRAY, tbo[0]);
+	glBindVertexArray (vao[0]);
+	glUseProgram (global_glprogram[GLPROGRAM_MESH]);
+	glUniform1i (global_gluniform[GLUNIFORM_MESH_TEX0], 0);
+
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		float m[4*4];
+		//m4f32_print (mt, stdout);
+		m4f32_mul (m, global_gcam.mvp, t[i]);
+		glUniformMatrix4fv (global_gluniform[GLUNIFORM_MESH_MVP], 1, GL_FALSE, (const GLfloat *) m);
+		glDrawArrays (GL_TRIANGLES, 0, count[0]);
+	}
+}
+
+
+
 static void systems_init (ecs_world_t * world)
 {
 	srand (1);
@@ -304,6 +372,7 @@ static void systems_init (ecs_world_t * world)
 	ECS_COMPONENT_DEFINE (world, component_stride);
 	ECS_COMPONENT_DEFINE (world, component_pointcloud);
 	ECS_COMPONENT_DEFINE (world, component_mesh);
+	ECS_COMPONENT_DEFINE (world, component_transform);
 
 	ECS_TRIGGER (world, trigger_tbo_onadd, EcsOnAdd, component_tbo);
 	ECS_TRIGGER (world, trigger_vao_onadd, EcsOnAdd, component_vao);
@@ -312,6 +381,7 @@ static void systems_init (ecs_world_t * world)
 	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, component_mesh, component_count, component_vao);
 	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, component_mesh, component_count, component_rectangle);
 	ECS_SYSTEM (world, system_mesh_draw, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_tbo, component_position, component_scale, component_quaternion);
+	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_tbo, component_transform);
 
 	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, component_quaternion, $component_controller);
 	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);

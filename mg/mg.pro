@@ -3,16 +3,19 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-DEFINES += CSC_SRCDIR=\\\"../mathgui/\\\"
+DEFINES += CSC_SRCDIR=\\\"../mg/\\\"
 #DEFINES += DEBUG
 
 HEADERS += csc/csc_math.h
 HEADERS += csc/csc_qf32.h
 HEADERS += csc/csc_v3f32.h
 HEADERS += csc/csc_v4f32.h
-HEADERS += components.h
 HEADERS += systems.h
+HEADERS += mg_comp.h
+HEADERS += mg_attr.h
+HEADERS += mg_send.h
 HEADERS += eavnet.h
+HEADERS += eavnet_recv.h
 
 
 QMAKE_CFLAGS += -Wno-unused-function
@@ -20,7 +23,7 @@ QMAKE_CFLAGS += -Wno-missing-braces
 QMAKE_CFLAGS += -Wno-unused-parameter
 QMAKE_CFLAGS += -Wno-missing-field-initializers
 
-SOURCES += mathgui.c
+SOURCES += mg.c
 SOURCES += ../flecs/flecs.c
 #SOURCES += flecs/flecs_meta.c
 #SOURCES += flecs/flecs_components_http.c

@@ -17,9 +17,11 @@
 #include <stdio.h>
 
 
-#include "components.h"
 #include "systems.h"
+#include "mg_attr.h"
+#include "mg_comp.h"
 #include "eavnet.h"
+#include "eavnet_recv.h"
 
 
 #define WIN_X SDL_WINDOWPOS_UNDEFINED
@@ -35,7 +37,7 @@
 
 
 
-static void addents (ecs_world_t * world)
+static void test_addents (ecs_world_t * world)
 {
 
 	ECS_ENTITY (world, mytexture1, component_tbo);
@@ -84,14 +86,10 @@ static void eavnet_test (struct eavnet_context * ctx)
 
 	{
 		uint32_t count = 1000;
-		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, ATTR_POINTCLOUD, NULL, 0);
-		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, ATTR_COUNT, &(component_count){count}, 0);
-		printf ("sizeof (struct mynet_eav): %i\n", (int)sizeof (struct mynet_eav));
+		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_POINTCLOUD, NULL, 0);
+		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_COUNT, &(component_count){count}, 0);
 		uint32_t size = count * sizeof (component_position);
-		struct mynet_eav * pc = malloc (sizeof (struct mynet_eav) + size);
-		pc->entity = MYENT_DRAW_CLOUD;
-		pc->attribute = ATTR_POINTCLOUD_POS;
-		component_position * p = (void*)pc->value;
+		component_position * p = malloc (size);
 		for (uint32_t i = 0; i < count; ++i)
 		{
 			p[i][0] = 10.0f * (float)i / rand();
@@ -99,25 +97,25 @@ static void eavnet_test (struct eavnet_context * ctx)
 			p[i][2] = 10.0f * (float)i / rand();
 			p[i][3] = 100.0f;
 		}
-		//eavnet_receiver (ctx, pc, size);
-		free (pc);
+		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_POINTCLOUD_POS, p, size);
+		free (p);
 	}
 
-	eavnet_receiver (ctx, MYENT_TEXTURE1, ATTR_TEXTURE, &(component_texture){0, 100, 100, 1}, 0);
-	eavnet_receiver (ctx, MYENT_TEXTURE2, ATTR_TEXTURE, &(component_texture){0, 300, 300, 1}, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, ATTR_MESH, NULL, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, ATTR_COUNT, &(component_count){6}, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, ATTR_RECTANGLE, &(component_rectangle){1.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, ATTR_POSITION,&(component_position){3.0f, 1.0f, 0.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, ATTR_SCALE, &(component_position){0.3f, 0.3f, 0.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, ATTR_QUATERNION, &(component_position){0.0f, 0.0f, 0.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, ATTR_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, ATTR_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE1}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, ATTR_POSITION, &(component_position){4.0f, 1.0f, 0.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, ATTR_SCALE, &(component_position){0.3f, 0.3f, 0.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, ATTR_QUATERNION, &(component_position){0.0f, 0.0f, 0.0f, 1.0f}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, ATTR_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, ATTR_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE2}, 0);
+	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(component_texture){0, 100, 100, 1}, 0);
+	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(component_texture){0, 300, 300, 1}, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_MESH, NULL, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_COUNT, &(component_count){6}, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(component_rectangle){1.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION,&(component_position){3.0f, 1.0f, 0.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE, &(component_position){0.3f, 0.3f, 0.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_QUATERNION, &(component_position){0.0f, 0.0f, 0.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE1}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_POSITION, &(component_position){4.0f, 1.0f, 0.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_SCALE, &(component_position){0.3f, 0.3f, 0.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_QUATERNION, &(component_position){0.0f, 0.0f, 0.0f, 1.0f}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE2}, 0);
 	//mynet_send_ptr(NULL, 0, 0, &(component_position){1.0f, 2.0f, 3.0f, 1.0f}, sizeof (component_position));
 }
 
@@ -147,11 +145,12 @@ int main (int argc, char * argv[])
 
 	ecs_world_t * world = ecs_init();
 	systems_init (world);
-	//addents (world);
+	//test_addents (world);//For testing
+
 	struct eavnet_context eavcontext = {0};
 	eavcontext.world = world;
 	eavnet_context_init (&eavcontext, "tcp://:9002");
-	eavnet_test (&eavcontext);
+	//eavnet_test (&eavcontext);
 
 	//ecs_entity_t e3 = e2[0];
 	const uint8_t * keyboard = SDL_GetKeyboardState (NULL);

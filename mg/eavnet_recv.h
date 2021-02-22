@@ -13,10 +13,10 @@
 #include <nng/protocol/pair1/pair.h>
 #include <nng/supplemental/util/platform.h>
 
-#include "components.h"
-
-#define EAVNET_ENTITY_MAX 1000
-#define EAVNET_SEND(sock, type, data) SDLNet_TCP_Send ((sock), &(type)data, sizeof((type)data));
+#include "eavnet.h"
+#include "systems.h"
+#include "mg_attr.h"
+#include "mg_comp.h"
 
 
 
@@ -46,16 +46,21 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	ecs_entity_t e = ctx->entities[entity];
 	switch (attribute)
 	{
-	case ATTR_COUNT:{
+	case MG_COUNT:{
 		uint32_t * a = ptr;
 		ecs_set (world, e, component_count, {*a});
 		break;}
-	case ATTR_POINTCLOUD:
+	case MG_POINTCLOUD:
 		ecs_add (world, e, component_pointcloud);
 		break;
-	case ATTR_POINTCLOUD_POS:{
+	case MG_POINTCLOUD_POS:{
+		//ecs_add (world, e, component_pointcloud);
+		//ecs_progress (world, 0);
 		component_pointcloud const * cloud = ecs_get (world, e, component_pointcloud);
 		component_count const * count = ecs_get (world, e, component_count);
+		ASSERT_NOTNULL (cloud);
+		ASSERT_NOTNULL (count);
+		ASSERT (glIsBuffer (cloud->vbop));
 		uint32_t size = (*count) * sizeof (component_position);
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vbop);
 		component_position * p = ptr;
@@ -68,36 +73,44 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		}
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
 		break;}
-	case ATTR_POINTCLOUD_COL:{
+	case MG_POINTCLOUD_COL:{
+		//ecs_add (world, e, component_pointcloud);
+		//ecs_progress (world, 0);
 		component_pointcloud const * cloud = ecs_get (world, e, component_pointcloud);
 		component_count const * count = ecs_get (world, e, component_count);
+		ASSERT_NOTNULL (cloud);
+		ASSERT_NOTNULL (count);
+		ASSERT (glIsBuffer (cloud->vboc));
 		uint32_t size = (*count) * sizeof (component_color);
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vboc);
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), ptr);
 		break;}
-	case ATTR_MESH:
+	case MG_MESH:
 		ecs_add (world, e, component_mesh);
 		ecs_add (world, e, component_vao);
 		break;
-	case ATTR_TEXTURE:{
+	case MG_TEXTURE:{
 		ecs_add (world, e, component_tbo);
 		ecs_set_ptr (world, e, component_texture, ptr);
 		break;}
-	case ATTR_POSITION:{
+	case MG_POSITION:{
 		ecs_set_ptr (world, e, component_position, ptr);
 		break;}
-	case ATTR_SCALE:{
+	case MG_SCALE:{
 		ecs_set_ptr (world, e, component_scale, ptr);
 		break;}
-	case ATTR_QUATERNION:{
+	case MG_QUATERNION:{
 		ecs_set_ptr (world, e, component_quaternion, ptr);
 		break;}
-	case ATTR_ADD_INSTANCEOF:{
+	case MG_ADD_INSTANCEOF:{
 		uint32_t * a = ptr;
 		ecs_add_entity (world, e, ECS_INSTANCEOF | ctx->entities[*a]);
 		break;}
-	case ATTR_RECTANGLE:{
+	case MG_RECTANGLE:{
 		ecs_set_ptr (world, e, component_rectangle, ptr);
+		break;}
+	case MG_TRANSFORM:{
+		ecs_set_ptr (world, e, component_transform, ptr);
 		break;}
 	}
 
@@ -115,6 +128,11 @@ static void eavnet_receiver1 (struct eavnet_context * ctx)
 	else if (rv != 0)
 	{
 		NNG_EXIT_ON_ERROR (rv);
+	}
+	else if (nng_msg_len (msg) < (sizeof (uint32_t) * 2))
+	{
+		nng_msg_free (msg);
+		return;
 	}
 	uint32_t entity;
 	uint32_t attribute;
