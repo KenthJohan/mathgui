@@ -61,9 +61,9 @@ static struct csc_gcam global_gcam;
 
 
 
-static void trigger_tbo_onadd (ecs_iter_t *it)
+static void trigger_gl_tex2darray_onadd (ecs_iter_t *it)
 {
-	printf ("trigger_tbo_onadd: ");
+	printf ("[ECS_TRIGGER] trigger_tbo_onadd: ");
 	ECS_COLUMN (it, component_gl_tex2darray, t, 1);
 	glGenTextures (it->count, t);
 	for (int32_t i = 0; i < it->count; ++i)
@@ -76,7 +76,7 @@ static void trigger_tbo_onadd (ecs_iter_t *it)
 
 static void trigger_vao_onadd (ecs_iter_t *it)
 {
-	printf ("trigger_vao_onadd: ");
+	printf ("[ECS_TRIGGER] trigger_vao_onadd: ");
 	ECS_COLUMN (it, component_vao, vao, 1);
 	glGenVertexArrays (it->count, vao);
 	for (int32_t i = 0; i < it->count; ++i)
@@ -89,7 +89,7 @@ static void trigger_vao_onadd (ecs_iter_t *it)
 
 static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 {
-	printf ("trigger_mesh_vbo_onadd: ");
+	printf ("[ECS_TRIGGER] trigger_mesh_vbo_onadd: ");
 	ECS_COLUMN (it, component_mesh, mesh, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -104,7 +104,7 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 
 static void trigger_transform (ecs_iter_t *it)
 {
-	printf ("trigger_transform_onadd: ");
+	printf ("[ECS_TRIGGER] trigger_transform_onadd: ");
 	ECS_COLUMN (it, component_transform, t, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -155,19 +155,28 @@ static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
 
 static void system_texture_onset (ecs_iter_t *it)
 {
-	printf ("component_texture_onadd\n");
-	ECS_COLUMN (it, component_texture, tex, 1);
-	ECS_COLUMN (it, component_gl_tex2darray, tbo, 2);
+	ECS_COLUMN (it, component_texture, texure, 1);
+	ECS_COLUMN (it, component_gl_tex2darray, tex, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		uint32_t width = tex[i].width;
-		uint32_t height = tex[i].height;
-		uint32_t depth = tex[i].depth;
+		if (glIsTexture (tex[i]))
+		{
+			printf ("[ECS_SYSTEM] component_texture_onadd tex (%i) redefining\n", tex[i]);
+			glDeleteTextures (1, tex + i);
+			//continue;
+		}
+		else
+		{
+			printf ("[ECS_SYSTEM] component_texture_onadd tex (%i)\n", tex[i]);
+		}
+		uint32_t width = texure[i].width;
+		uint32_t height = texure[i].height;
+		uint32_t depth = texure[i].depth;
 		uint32_t channels = 4;
 		unsigned size = width * height * depth * channels * sizeof(uint8_t);
 		uint8_t * data = calloc (size, 1);
-		glActiveTexture (GL_TEXTURE0 + tex[i].unit);
-		glBindTexture (GL_TEXTURE_2D_ARRAY, tbo[i]);//Depends on glActiveTexture()
+		glActiveTexture (GL_TEXTURE0 + texure[i].unit);
+		glBindTexture (GL_TEXTURE_2D_ARRAY, tex[i]);//Depends on glActiveTexture()
 		glTexParameteri (GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);//Depends on glBindTexture()
 		glTexParameteri (GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);//Depends on glBindTexture()
 		glTexParameteri (GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//Depends on glBindTexture()
@@ -197,7 +206,7 @@ static void system_apply_rotation (ecs_iter_t *it)
 
 static void system_pointcloud_set (ecs_iter_t *it)
 {
-	printf ("system_pointcloud_set\n");
+	printf ("[ECS_SYSTEM] system_pointcloud_set\n");
 	ECS_COLUMN (it, component_pointcloud, pc, 1);
 	ECS_COLUMN (it, component_count, c, 2);
 	for (int32_t i = 0; i < it->count; ++i)
@@ -244,24 +253,20 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 
 static void system_mesh_set_rectangle (ecs_iter_t *it)
 {
-	printf ("system_mesh_set_rectangle\n");
+	printf ("[ECS_SYSTEM] system_mesh_set_rectangle\n");
 	ECS_COLUMN (it, component_mesh, img, 1);
 	ECS_COLUMN (it, component_count, count, 2);
 	ECS_COLUMN (it, component_rectangle, wh, 3);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		ASSERT (count[i] == 6);
-
-
-		printf ("system_mesh_set_rectangle %i:%i\n", img[i].vbop, count[i]);
+		//printf ("[ECS_SYSTEM] system_mesh_set_rectangle %i:%i\n", img[i].vbop, count[i]);
 		glBindBuffer (GL_ARRAY_BUFFER, img[i].vbop);
 		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_position), NULL, GL_DYNAMIC_DRAW);
 		component_position p[6];
 		csc_gl_make_rectangle_pos ((void*)p, 0.0f, 0.0f, 0.0f, 0.0f, wh[i][0], wh[i][1], 4);
 		glBufferSubData (GL_ARRAY_BUFFER, 0, 6 * sizeof (component_position), p);
-
-
-		printf ("system_mesh_set_rectangle %i:%i\n", img[i].vbot, count[i]);
+		//printf ("[ECS_SYSTEM] system_mesh_set_rectangle %i:%i\n", img[i].vbot, count[i]);
 		glBindBuffer (GL_ARRAY_BUFFER, img[i].vbot);
 		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_uv), NULL, GL_DYNAMIC_DRAW);
 		component_uv uv[6];
@@ -273,7 +278,7 @@ static void system_mesh_set_rectangle (ecs_iter_t *it)
 
 static void system_mesh_set (ecs_iter_t *it)
 {
-	printf ("system_mesh_set\n");
+	printf ("[ECS_SYSTEM] system_mesh_set\n");
 	ECS_COLUMN (it, component_mesh, mesh, 1);
 	ECS_COLUMN (it, component_count, count, 2);
 	ECS_COLUMN (it, component_vao, vao, 3);
@@ -335,7 +340,6 @@ static void system_mesh_draw (ecs_iter_t *it)
 		glDrawArrays (GL_TRIANGLES, 0, count[0]);
 	}
 }
-
 
 
 static void system_mesh_draw1 (ecs_iter_t *it)
@@ -412,7 +416,7 @@ static void systems_init (ecs_world_t * world)
 	ECS_COMPONENT_DEFINE (world, component_mesh);
 	ECS_COMPONENT_DEFINE (world, component_transform);
 
-	ECS_TRIGGER (world, trigger_tbo_onadd, EcsOnAdd, component_gl_tex2darray);
+	ECS_TRIGGER (world, trigger_gl_tex2darray_onadd, EcsOnAdd, component_gl_tex2darray);
 	ECS_TRIGGER (world, trigger_vao_onadd, EcsOnAdd, component_vao);
 	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, component_mesh);
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, component_transform);

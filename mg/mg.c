@@ -40,9 +40,9 @@
 static void test_ecs_addents (ecs_world_t * world)
 {
 
-	ECS_ENTITY (world, mytexture1, component_tbo);
-	ECS_ENTITY (world, mytexture2, component_tbo);
-	ECS_ENTITY (world, mytexture3, component_tbo);
+	ECS_ENTITY (world, mytexture1, component_gl_tex2darray);
+	ECS_ENTITY (world, mytexture2, component_gl_tex2darray);
+	ECS_ENTITY (world, mytexture3, component_gl_tex2darray);
 	ecs_set (world, mytexture1, component_texture, {.unit = 0, .width = 100, .height = 100, .depth = 4});
 	ecs_set (world, mytexture2, component_texture, {.unit = 0, .width = 50, .height = 50, .depth = 4});
 	ecs_set (world, mytexture3, component_texture, {.unit = 0, .width = 200, .height = 200, .depth = 4});
@@ -51,7 +51,7 @@ static void test_ecs_addents (ecs_world_t * world)
 	ecs_set (world, img, component_count, {6});
 	ecs_set (world, img, component_rectangle, {1.0f, 1.0f});
 
-	ecs_entity_t const * e2 = ecs_bulk_new (world, 0, 4);
+	ecs_entity_t const * e2 = ecs_bulk_new (world, component_transform, 4);
 	ecs_add_entity (world, e2[0], ECS_INSTANCEOF | mytexture1);
 	ecs_add_entity (world, e2[1], ECS_INSTANCEOF | mytexture1);
 	ecs_add_entity (world, e2[2], ECS_INSTANCEOF | mytexture2);
@@ -160,7 +160,7 @@ int main (int argc, char * argv[])
 	struct eavnet_context eavcontext = {0};
 	eavcontext.world = world;
 	eavnet_context_init (&eavcontext, "tcp://:9002");
-	//eavnet_test (&eavcontext);
+	test_eavnet (&eavcontext);
 
 	//ecs_entity_t e3 = e2[0];
 	const uint8_t * keyboard = SDL_GetKeyboardState (NULL);
