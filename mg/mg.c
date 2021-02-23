@@ -37,7 +37,7 @@
 
 
 
-static void test_addents (ecs_world_t * world)
+static void test_ecs_addents (ecs_world_t * world)
 {
 
 	ECS_ENTITY (world, mytexture1, component_tbo);
@@ -70,7 +70,7 @@ static void test_addents (ecs_world_t * world)
 }
 
 
-static void eavnet_test (struct eavnet_context * ctx)
+static void test_eavnet (struct eavnet_context * ctx)
 {
 
 	enum myent
@@ -120,8 +120,17 @@ static void eavnet_test (struct eavnet_context * ctx)
 }
 
 
+static void test_ecs_onset (ecs_world_t * world)
+{
+	ecs_entity_t e =  ecs_new (world, 0);
+	ecs_add (world, e, component_transform);
+	ecs_add (world, e, component_quaternion);
+	ecs_add (world, e, component_position);
+	ecs_add (world, e, component_scale);
 
 
+	ecs_set (world, e, component_scale, {1.0f, 2.0f, 1.0f, 1.0f});
+}
 
 
 
@@ -145,7 +154,8 @@ int main (int argc, char * argv[])
 
 	ecs_world_t * world = ecs_init();
 	systems_init (world);
-	//test_addents (world);//For testing
+	//test_ecs_onset (world);
+	//test_ecs_addents (world);//For testing
 
 	struct eavnet_context eavcontext = {0};
 	eavcontext.world = world;

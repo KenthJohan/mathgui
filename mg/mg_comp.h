@@ -3,7 +3,7 @@
 #include "csc/csc_math.h"
 #include "csc/csc_qf32.h"
 
-typedef uint32_t component_tbo;
+typedef uint32_t component_gl_tex2darray;
 typedef uint32_t component_color;
 typedef v4f32 component_position;
 typedef v4f32 component_scale;

@@ -90,7 +90,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ecs_add (world, e, component_vao);
 		break;
 	case MG_TEXTURE:{
-		ecs_add (world, e, component_tbo);
+		ecs_add (world, e, component_gl_tex2darray);
 		ecs_set_ptr (world, e, component_texture, ptr);
 		break;}
 	case MG_POSITION:{
@@ -111,6 +111,16 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;}
 	case MG_TRANSFORM:{
 		ecs_set_ptr (world, e, component_transform, ptr);
+		break;}
+	case MG_TEXTURE_CONTENT:{
+		component_texture const * texture = ecs_get (world, e, component_texture);
+		component_gl_tex2darray const * tex = ecs_get (world, e, component_gl_tex2darray);
+		glActiveTexture (GL_TEXTURE0 + texture->unit);
+		glBindTexture (GL_TEXTURE_2D_ARRAY, *tex);//Depends on glActiveTexture()
+		ASSERT (value_size == (texture->width * texture->height * sizeof (uint32_t)));
+		{
+			glTexSubImage3D (GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, texture->width, texture->height, 1, GL_RGBA, GL_UNSIGNED_BYTE, ptr);
+		}
 		break;}
 	}
 

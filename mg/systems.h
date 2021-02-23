@@ -12,7 +12,7 @@
 #include "mg_comp.h"
 
 //OpenGL:
-ECS_COMPONENT_DECLARE (component_tbo);
+ECS_COMPONENT_DECLARE (component_gl_tex2darray);
 ECS_COMPONENT_DECLARE (component_vbo);
 ECS_COMPONENT_DECLARE (component_vao);
 ECS_COMPONENT_DECLARE (component_va);
@@ -64,7 +64,7 @@ static struct csc_gcam global_gcam;
 static void trigger_tbo_onadd (ecs_iter_t *it)
 {
 	printf ("trigger_tbo_onadd: ");
-	ECS_COLUMN (it, component_tbo, t, 1);
+	ECS_COLUMN (it, component_gl_tex2darray, t, 1);
 	glGenTextures (it->count, t);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -97,6 +97,18 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 		glGenBuffers (1, &mesh[i].vbot);
 		glBindBuffer (GL_ARRAY_BUFFER, mesh[i].vbop);
 		glBindBuffer (GL_ARRAY_BUFFER, mesh[i].vbot);
+	}
+	printf ("\n");
+}
+
+
+static void trigger_transform (ecs_iter_t *it)
+{
+	printf ("trigger_transform_onadd: ");
+	ECS_COLUMN (it, component_transform, t, 1);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		m4f32_identity (t[i]);
 	}
 	printf ("\n");
 }
@@ -145,7 +157,7 @@ static void system_texture_onset (ecs_iter_t *it)
 {
 	printf ("component_texture_onadd\n");
 	ECS_COLUMN (it, component_texture, tex, 1);
-	ECS_COLUMN (it, component_tbo, tbo, 2);
+	ECS_COLUMN (it, component_gl_tex2darray, tbo, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		uint32_t width = tex[i].width;
@@ -291,7 +303,7 @@ static void system_mesh_draw (ecs_iter_t *it)
 	ECS_COLUMN (it, component_mesh, img, 1);//Shared
 	ECS_COLUMN (it, component_count, count, 2);//Shared
 	ECS_COLUMN (it, component_vao, vao, 3);//Shared
-	ECS_COLUMN (it, component_tbo, tbo, 4);//Shared
+	ECS_COLUMN (it, component_gl_tex2darray, tbo, 4);//Shared
 	ECS_COLUMN (it, component_position, p, 5);
 	ECS_COLUMN (it, component_scale, s, 6);
 	ECS_COLUMN (it, component_quaternion, q, 7);
@@ -331,7 +343,7 @@ static void system_mesh_draw1 (ecs_iter_t *it)
 	ECS_COLUMN (it, component_mesh, img, 1);//Shared
 	ECS_COLUMN (it, component_count, count, 2);//Shared
 	ECS_COLUMN (it, component_vao, vao, 3);//Shared
-	ECS_COLUMN (it, component_tbo, tbo, 4);//Shared
+	ECS_COLUMN (it, component_gl_tex2darray, tbo, 4);//Shared
 	ECS_COLUMN (it, component_transform, t, 5);
 	glActiveTexture (GL_TEXTURE0);
 	glBindTexture (GL_TEXTURE_2D_ARRAY, tbo[0]);
@@ -350,12 +362,38 @@ static void system_mesh_draw1 (ecs_iter_t *it)
 }
 
 
+static void system_transform_onset (ecs_iter_t *it)
+{
+	printf ("system_transform_onset\n");
+	ECS_COLUMN (it, component_position, p, 1);
+	ECS_COLUMN (it, component_scale, s, 2);
+	ECS_COLUMN (it, component_quaternion, q, 3);
+	ECS_COLUMN (it, component_transform, t, 4);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		float * m = t[i];
+		float ms[4*4];
+		float mt[4*4];
+		float mr[4*4];
+		m4f32_identity (m);
+		m4f32_identity (ms);
+		m4f32_identity (mr);
+		m4f32_identity (mt);
+		m4f32_scale (ms, s[i]);
+		qf32_m4 (mr, q[i]);
+		m4f32_translation (mt, p[i]);
+		m4f32_mul (m, ms, m); //Apply scale
+		m4f32_mul (m, mr, m); //Apply rotation
+		m4f32_mul (m, mt, m); //Apply translation
+	}
+}
+
 
 static void systems_init (ecs_world_t * world)
 {
 	srand (1);
 
-	ECS_COMPONENT_DEFINE (world, component_tbo);
+	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
 	ECS_COMPONENT_DEFINE (world, component_texture);
 	ECS_COMPONENT_DEFINE (world, component_color);
 	ECS_COMPONENT_DEFINE (world, component_position);
@@ -374,18 +412,20 @@ static void systems_init (ecs_world_t * world)
 	ECS_COMPONENT_DEFINE (world, component_mesh);
 	ECS_COMPONENT_DEFINE (world, component_transform);
 
-	ECS_TRIGGER (world, trigger_tbo_onadd, EcsOnAdd, component_tbo);
+	ECS_TRIGGER (world, trigger_tbo_onadd, EcsOnAdd, component_gl_tex2darray);
 	ECS_TRIGGER (world, trigger_vao_onadd, EcsOnAdd, component_vao);
 	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, component_mesh);
+	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, component_transform);
 
 	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, component_mesh, component_count, component_vao);
 	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, component_mesh, component_count, component_rectangle);
-	ECS_SYSTEM (world, system_mesh_draw, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_tbo, component_position, component_scale, component_quaternion);
-	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_tbo, component_transform);
+	//ECS_SYSTEM (world, system_mesh_draw, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_gl_tex2darray, component_position, component_scale, component_quaternion);
+	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_gl_tex2darray, component_transform);
+	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, component_position, component_scale, component_quaternion, component_transform);
 
 	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, component_quaternion, $component_controller);
 	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);
-	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_tbo);
+	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_gl_tex2darray);
 	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, component_pointcloud, component_count);
 	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, component_pointcloud, component_count);
 
