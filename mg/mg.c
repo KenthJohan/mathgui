@@ -160,7 +160,7 @@ int main (int argc, char * argv[])
 	struct eavnet_context eavcontext = {0};
 	eavcontext.world = world;
 	eavnet_context_init (&eavcontext, "tcp://:9002");
-	test_eavnet (&eavcontext);
+	//test_eavnet (&eavcontext);
 
 	//ecs_entity_t e3 = e2[0];
 	const uint8_t * keyboard = SDL_GetKeyboardState (NULL);
@@ -214,7 +214,6 @@ int main (int argc, char * argv[])
 		glUniformMatrix4fv (uniform_mvp, 1, GL_FALSE, (const GLfloat *) gcam.mvp);
 		glDrawArrays (GL_TRIANGLES, 0, img.cap * CSC_GLIMAGE_VERTS_COUNT);
 		*/
-
 
 		ecs_progress (world, 0);
 		SDL_Delay (10);

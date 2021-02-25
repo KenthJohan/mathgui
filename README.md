@@ -22,4 +22,13 @@ pkg-config --static --cflags --libs sdl2`
 
 # Linux Build
 
-* TODO
+```bash
+git clone https://github.com/nanomsg/nng
+cd nng && mkdir build && cd build
+cmake -G"MinGW Makefiles" .. -DCMAKE_INSTALL_PREFIX="C:\msys64\mingw64"
+pacman -R cmake
+pacman -S mingw-w64-x86_64-cmake
+mingw32-make -j4
+mingw32-make test
+mingw32-make install
+```
