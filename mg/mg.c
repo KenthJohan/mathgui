@@ -19,6 +19,10 @@
 
 #include "systems.h"
 #include "system_mesh.h"
+#include "system_pointcloud.h"
+#include "system_lines.h"
+#include "system_texture.h"
+
 #include "mg_attr.h"
 #include "mg_comp.h"
 #include "eavnet.h"
@@ -188,7 +192,10 @@ int main (int argc, char * argv[])
 
 	ecs_world_t * world = ecs_init();
 	systems_init (world);
+	system_texture_init (world);
 	system_mesh_init (world);
+	system_pointcloud_init (world);
+	system_lines_init (world);
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);

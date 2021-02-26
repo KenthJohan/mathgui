@@ -1,36 +1,20 @@
 #pragma once
 
-#include "csc/csc_math.h"
 #include <flecs.h>
 #include <GL/glew.h>
 
-typedef GLuint component_tbo;
-
-typedef struct component_texture
-{
-	uint32_t unit;
-	uint32_t width;
-	uint32_t height;
-	uint32_t depth;
-} component_texture;
+#include "csc/csc_math.h"
+#include "csc/csc_gl.h"
+#include "csc/csc_gcam.h"
+#include "csc/csc_qf32.h"
 
 
-ECS_COMPONENT_DECLARE (component_tbo);
+#include "mg_comp.h"
+#include "systems.h"
+
+
+ECS_COMPONENT_DECLARE (component_gl_tex2darray);
 ECS_COMPONENT_DECLARE (component_texture);
-
-
-static void component_tbo_onadd (ecs_iter_t *it)
-{
-	printf ("component_tbo_onadd: ");
-	ECS_COLUMN (it, component_tbo, t, 1);
-	glGenTextures (it->count, t);
-	for (int32_t i = 0; i < it->count; ++i)
-	{
-		printf ("%i, ", t[i]);
-	}
-	printf ("\n");
-}
-
 
 
 static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
@@ -72,21 +56,30 @@ static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
 }
 
 
-static void component_texture_onset (ecs_iter_t *it)
+static void system_texture_onset (ecs_iter_t *it)
 {
-	printf ("component_texture_onadd\n");
-	ECS_COLUMN (it, component_texture, tex, 1);
-	ECS_COLUMN (it, component_tbo, tbo, 2);
+	ECS_COLUMN (it, component_texture, texure, 1);
+	ECS_COLUMN (it, component_gl_tex2darray, tex, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		uint32_t width = tex[i].width;
-		uint32_t height = tex[i].height;
-		uint32_t depth = tex[i].depth;
+		if (glIsTexture (tex[i]))
+		{
+			printf ("[ECS_SYSTEM] component_texture_onadd tex (%i) redefining\n", tex[i]);
+			glDeleteTextures (1, tex + i);
+			//continue;
+		}
+		else
+		{
+			printf ("[ECS_SYSTEM] component_texture_onadd tex (%i)\n", tex[i]);
+		}
+		uint32_t width = texure[i].width;
+		uint32_t height = texure[i].height;
+		uint32_t depth = texure[i].depth;
 		uint32_t channels = 4;
 		unsigned size = width * height * depth * channels * sizeof(uint8_t);
 		uint8_t * data = calloc (size, 1);
-		glActiveTexture (GL_TEXTURE0 + tex[i].unit);
-		glBindTexture (GL_TEXTURE_2D_ARRAY, tbo[i]);//Depends on glActiveTexture()
+		glActiveTexture (GL_TEXTURE0 + texure[i].unit);
+		glBindTexture (GL_TEXTURE_2D_ARRAY, tex[i]);//Depends on glActiveTexture()
 		glTexParameteri (GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);//Depends on glBindTexture()
 		glTexParameteri (GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);//Depends on glBindTexture()
 		glTexParameteri (GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//Depends on glBindTexture()
@@ -103,16 +96,28 @@ static void component_texture_onset (ecs_iter_t *it)
 }
 
 
-static void component_tbo_init (ecs_world_t * world)
+static void trigger_gl_tex2darray_onadd (ecs_iter_t *it)
 {
-	printf ("component_tbo_init\n");
-	srand (1);
-	ECS_COMPONENT_DEFINE (world, component_tbo);
-	ECS_COMPONENT_DEFINE (world, component_texture);
-	ECS_TRIGGER (world, component_tbo_onadd, EcsOnAdd, component_tbo);
-	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);
-	ECS_SYSTEM (world, component_texture_onset, EcsOnSet, component_texture, component_tbo);
+	printf ("[ECS_TRIGGER] trigger_tbo_onadd: ");
+	ECS_COLUMN (it, component_gl_tex2darray, t, 1);
+	glGenTextures (it->count, t);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		printf ("%i, ", t[i]);
+	}
+	printf ("\n");
 }
+
+
+static void system_texture_init (ecs_world_t * world)
+{
+	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
+	ECS_COMPONENT_DEFINE (world, component_texture);
+	ECS_TRIGGER (world, trigger_gl_tex2darray_onadd, EcsOnAdd, component_gl_tex2darray);
+	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_gl_tex2darray);
+}
+
+
 
 
 
