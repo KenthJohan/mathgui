@@ -12,10 +12,7 @@
 #include "mg_comp.h"
 
 
-//OpenGL:
-ECS_COMPONENT_DECLARE (component_vbo);
-ECS_COMPONENT_DECLARE (component_vao);
-ECS_COMPONENT_DECLARE (component_va);
+
 
 //Misc:
 ECS_COMPONENT_DECLARE (component_stride);
@@ -56,17 +53,7 @@ static GLint global_gluniform[GLUNIFORM_COUNT];
 static struct csc_gcam global_gcam;
 
 
-static void trigger_vao_onadd (ecs_iter_t *it)
-{
-	printf ("[ECS_TRIGGER] trigger_vao_onadd: ");
-	ECS_COLUMN (it, component_vao, vao, 1);
-	glGenVertexArrays (it->count, vao);
-	for (int32_t i = 0; i < it->count; ++i)
-	{
-		printf ("%i, ", vao[i]);
-	}
-	printf ("\n");
-}
+
 
 
 static void trigger_transform (ecs_iter_t *it)
@@ -130,14 +117,11 @@ static void systems_init (ecs_world_t * world)
 	ECS_COMPONENT_DEFINE (world, component_uv);
 	ECS_COMPONENT_DEFINE (world, component_rectangle);
 	ECS_COMPONENT_DEFINE (world, component_controller);
-	ECS_COMPONENT_DEFINE (world, component_va);
-	ECS_COMPONENT_DEFINE (world, component_vao);
-	ECS_COMPONENT_DEFINE (world, component_vbo);
 	ECS_COMPONENT_DEFINE (world, component_count);
 	ECS_COMPONENT_DEFINE (world, component_stride);
 	ECS_COMPONENT_DEFINE (world, component_transform);
 
-	ECS_TRIGGER (world, trigger_vao_onadd, EcsOnAdd, component_vao);
+
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, component_transform);
 
 	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, component_position, component_scale, component_quaternion, component_transform);

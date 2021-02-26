@@ -13,7 +13,7 @@
 #include "systems.h"
 
 
-ECS_COMPONENT_DECLARE (component_gl_tex2darray);
+
 ECS_COMPONENT_DECLARE (component_texture);
 
 
@@ -96,24 +96,9 @@ static void system_texture_onset (ecs_iter_t *it)
 }
 
 
-static void trigger_gl_tex2darray_onadd (ecs_iter_t *it)
-{
-	printf ("[ECS_TRIGGER] trigger_tbo_onadd: ");
-	ECS_COLUMN (it, component_gl_tex2darray, t, 1);
-	glGenTextures (it->count, t);
-	for (int32_t i = 0; i < it->count; ++i)
-	{
-		printf ("%i, ", t[i]);
-	}
-	printf ("\n");
-}
-
-
 static void system_texture_init (ecs_world_t * world)
 {
-	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
 	ECS_COMPONENT_DEFINE (world, component_texture);
-	ECS_TRIGGER (world, trigger_gl_tex2darray_onadd, EcsOnAdd, component_gl_tex2darray);
 	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_gl_tex2darray);
 }
 

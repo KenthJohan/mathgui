@@ -18,6 +18,7 @@
 
 
 #include "systems.h"
+#include "system_opengl.h"
 #include "system_mesh.h"
 #include "system_pointcloud.h"
 #include "system_lines.h"
@@ -192,6 +193,7 @@ int main (int argc, char * argv[])
 
 	ecs_world_t * world = ecs_init();
 	systems_init (world);
+	system_opengl_init (world);
 	system_texture_init (world);
 	system_mesh_init (world);
 	system_pointcloud_init (world);
