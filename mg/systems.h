@@ -11,6 +11,7 @@
 
 #include "mg_comp.h"
 
+
 //OpenGL:
 ECS_COMPONENT_DECLARE (component_gl_tex2darray);
 ECS_COMPONENT_DECLARE (component_vbo);
@@ -18,6 +19,7 @@ ECS_COMPONENT_DECLARE (component_vao);
 ECS_COMPONENT_DECLARE (component_va);
 ECS_COMPONENT_DECLARE (component_pointcloud);
 ECS_COMPONENT_DECLARE (component_mesh);
+ECS_COMPONENT_DECLARE (component_lines);
 
 //Misc:
 ECS_COMPONENT_DECLARE (component_stride);
@@ -241,12 +243,64 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 {
 	ECS_COLUMN (it, component_pointcloud, pc, 1);
 	ECS_COLUMN (it, component_count, c, 2);
+	glUseProgram (global_glprogram[GLPROGRAM_POINT]);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		glBindVertexArray (pc[i].vao);
-		glUseProgram (global_glprogram[GLPROGRAM_POINT]);
 		glUniformMatrix4fv (global_gluniform[GLUNIFORM_POINT_MVP], 1, GL_FALSE, (const GLfloat *) global_gcam.mvp);
 		glDrawArrays (GL_POINTS, 0, c[i]);
+	}
+}
+
+
+static void system_lines_draw (ecs_iter_t *it)
+{
+	ECS_COLUMN (it, component_lines, lines, 1);
+	ECS_COLUMN (it, component_count, count, 2);
+	glUseProgram (global_glprogram[GLPROGRAM_LINE]);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		glBindVertexArray (lines[i].vao);
+		glUniformMatrix4fv (global_gluniform[GLUNIFORM_LINE_MVP], 1, GL_FALSE, (const GLfloat *) global_gcam.mvp);
+		glDrawArrays (GL_LINES, 0, count[i]);
+	}
+}
+
+
+static void system_lines_onset (ecs_iter_t *it)
+{
+	printf ("[ECS_SYSTEM] system_lines_onset\n");
+	ECS_COLUMN (it, component_lines, lines, 1);
+	ECS_COLUMN (it, component_count, count, 2);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		void * data;
+		glGenVertexArrays (1, &lines[i].vao);
+		glGenBuffers (1, &lines[i].vbop);
+		glGenBuffers (1, &lines[i].vboc);
+		glBindVertexArray (lines[i].vao);
+
+		glEnableVertexAttribArray (0);
+		glEnableVertexAttribArray (1);
+
+		data = malloc(count[i] * sizeof (component_position));
+		v4f32_repeat_random (count[i], data);
+		v4f32_set_w_repeat (count[i], data, 10.0f);
+		glBindBuffer (GL_ARRAY_BUFFER, lines[i].vbop);
+		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_position), data, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer (0, 4, GL_FLOAT, GL_FALSE, 0, (void*)(intptr_t)0);
+		free (data);
+
+		data = malloc(count[i] * sizeof (component_color));
+		vu32_repeat_random_mask (count[i], data, 0xFFFFFFFF);
+		glBindBuffer (GL_ARRAY_BUFFER, lines[i].vboc);
+		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_color), data, GL_DYNAMIC_DRAW);
+		glEnableVertexAttribArray (1);
+		glVertexAttribPointer (1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)(intptr_t)0);
+		free (data);
+
+		ASSERT (glIsBuffer(lines[i].vbop) == GL_TRUE);
+		ASSERT (glIsBuffer(lines[i].vboc) == GL_TRUE);
 	}
 }
 
@@ -397,6 +451,8 @@ static void systems_init (ecs_world_t * world)
 {
 	srand (1);
 
+	ECS_COMPONENT_DEFINE (world, component_lines);
+
 	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
 	ECS_COMPONENT_DEFINE (world, component_texture);
 	ECS_COMPONENT_DEFINE (world, component_color);
@@ -432,6 +488,13 @@ static void systems_init (ecs_world_t * world)
 	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_gl_tex2darray);
 	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, component_pointcloud, component_count);
 	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, component_pointcloud, component_count);
+
+
+
+	ECS_SYSTEM (world, system_lines_draw, EcsOnUpdate, component_lines, component_count);
+	ECS_SYSTEM (world, system_lines_onset, EcsOnSet, component_lines, component_count);
+
+
 
 	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_pointcloud.glvs;"CSC_SRCDIR"shader_pointcloud.glfs");
 	global_glprogram[GLPROGRAM_LINE] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_line.glvs;"CSC_SRCDIR"shader_line.glfs");

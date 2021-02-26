@@ -34,6 +34,12 @@ typedef struct component_mesh
 	uint32_t vbop;
 	uint32_t vbot;
 } component_mesh;
+typedef struct component_lines
+{
+	uint32_t vao;
+	uint32_t vbop;
+	uint32_t vboc;
+} component_lines;
 typedef uint32_t component_vbo;
 typedef uint32_t component_va;
 typedef uint32_t component_stride;

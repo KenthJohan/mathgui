@@ -133,6 +133,38 @@ static void test_ecs_onset (ecs_world_t * world)
 }
 
 
+static void test_ecs_addlines (ecs_world_t * world)
+{
+	ecs_entity_t e = ecs_new (world, 0);
+	ecs_add (world, e, component_lines);
+	ecs_set (world, e, component_count, {6});
+	component_lines const * lines = ecs_get (world, e, component_lines);
+
+	component_position p[6] =
+	{
+	{0.0f, 0.0f, 0.0f, 1.0f},
+	{1.0f, 0.0f, 0.0f, 1.0f},
+	{0.0f, 0.0f, 0.0f, 1.0f},
+	{0.0f, 1.0f, 0.0f, 1.0f},
+	{0.0f, 0.0f, 0.0f, 1.0f},
+	{0.0f, 0.0f, 1.0f, 1.0f},
+	};
+	glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
+	glBufferSubData (GL_ARRAY_BUFFER, 0, sizeof(p), p);
+
+	component_color c[6] =
+	{
+	0xFF0000FF,
+	0xFF0000FF,
+	0xFF00FF00,
+	0xFF00FF00,
+	0xFFFF0000,
+	0xFFFF0000,
+	};
+	glBindBuffer (GL_ARRAY_BUFFER, lines->vboc);
+	glBufferSubData (GL_ARRAY_BUFFER, 0, sizeof(c), c);
+}
+
 
 int main (int argc, char * argv[])
 {
@@ -150,12 +182,14 @@ int main (int argc, char * argv[])
 	glEnable (GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable (GL_BLEND);
 	glEnable (GL_DEPTH_TEST);
+	glLineWidth (4.0f);
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	ecs_world_t * world = ecs_init();
 	systems_init (world);
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
+	test_ecs_addlines (world);
 
 	struct eavnet_context eavcontext = {0};
 	eavcontext.world = world;
