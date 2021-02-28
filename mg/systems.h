@@ -14,23 +14,7 @@
 
 
 
-//Misc:
-ECS_COMPONENT_DECLARE (component_stride);
-ECS_COMPONENT_DECLARE (component_count);
-ECS_COMPONENT_DECLARE (component_color);
-ECS_COMPONENT_DECLARE (component_position);
-ECS_COMPONENT_DECLARE (component_scale);
-ECS_COMPONENT_DECLARE (component_quaternion);
-ECS_COMPONENT_DECLARE (component_uv);
-ECS_COMPONENT_DECLARE (component_rectangle);
-ECS_COMPONENT_DECLARE (component_transform);
-ECS_COMPONENT_DECLARE (component_filename);
 
-//Input control:
-ECS_COMPONENT_DECLARE (component_controller);
-
-//Application:
-ECS_COMPONENT_DECLARE (component_applyrotation);
 
 enum glprogram_type
 {
@@ -109,28 +93,10 @@ static void system_transform_onset (ecs_iter_t *it)
 
 static void systems_init (ecs_world_t * world)
 {
-	srand (1);
-	ECS_COMPONENT_DEFINE (world, component_color);
-	ECS_COMPONENT_DEFINE (world, component_position);
-	ECS_COMPONENT_DEFINE (world, component_scale);
-	ECS_COMPONENT_DEFINE (world, component_quaternion);
-	ECS_COMPONENT_DEFINE (world, component_applyrotation);
-	ECS_COMPONENT_DEFINE (world, component_uv);
-	ECS_COMPONENT_DEFINE (world, component_rectangle);
-	ECS_COMPONENT_DEFINE (world, component_controller);
-	ECS_COMPONENT_DEFINE (world, component_count);
-	ECS_COMPONENT_DEFINE (world, component_stride);
-	ECS_COMPONENT_DEFINE (world, component_transform);
-	ECS_COMPONENT_DEFINE (world, component_filename);
-
-
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, component_transform);
-
 	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, component_position, component_scale, component_quaternion, component_transform);
-
 	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, component_quaternion, $component_controller);
 	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);
-
 
 	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_pointcloud.glvs;"CSC_SRCDIR"shader_pointcloud.glfs");
 	global_glprogram[GLPROGRAM_LINE] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_line.glvs;"CSC_SRCDIR"shader_line.glfs");

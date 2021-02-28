@@ -13,12 +13,7 @@
 #include "systems.h"
 
 
-//OpenGL:
-ECS_COMPONENT_DECLARE (component_gl_program);
-ECS_COMPONENT_DECLARE (component_vbo);
-ECS_COMPONENT_DECLARE (component_vao);
-ECS_COMPONENT_DECLARE (component_va);
-ECS_COMPONENT_DECLARE (component_gl_tex2darray);
+
 
 static void trigger_vao_onadd (ecs_iter_t *it)
 {
@@ -49,11 +44,6 @@ static void trigger_gl_tex2darray_onadd (ecs_iter_t *it)
 
 static void system_opengl_init (ecs_world_t * world)
 {
-	ECS_COMPONENT_DEFINE (world, component_va);
-	ECS_COMPONENT_DEFINE (world, component_vao);
-	ECS_COMPONENT_DEFINE (world, component_vbo);
-	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
-	ECS_COMPONENT_DEFINE (world, component_gl_program);
 	ECS_TRIGGER (world, trigger_vao_onadd, EcsOnAdd, component_vao);
 	ECS_TRIGGER (world, trigger_gl_tex2darray_onadd, EcsOnAdd, component_gl_tex2darray);
 }

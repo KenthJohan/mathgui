@@ -14,7 +14,7 @@
 
 
 
-ECS_COMPONENT_DECLARE (component_pointcloud);
+
 
 
 static void system_pointcloud_set (ecs_iter_t *it)
@@ -66,7 +66,6 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 
 static void system_pointcloud_init (ecs_world_t * world)
 {
-	ECS_COMPONENT_DEFINE (world, component_pointcloud);
 	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, component_pointcloud, component_count);
 	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, component_pointcloud, component_count);
 }

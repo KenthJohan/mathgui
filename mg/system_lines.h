@@ -10,10 +10,11 @@
 
 
 #include "mg_comp.h"
+#include "mg_compdef.h"
 #include "systems.h"
 
 
-ECS_COMPONENT_DECLARE (component_lines);
+
 
 
 static void system_lines_draw (ecs_iter_t *it)
@@ -70,7 +71,6 @@ static void system_lines_onset (ecs_iter_t *it)
 
 static void system_lines_init (ecs_world_t * world)
 {
-	ECS_COMPONENT_DEFINE (world, component_lines);
 	ECS_SYSTEM (world, system_lines_draw, EcsOnUpdate, component_lines, component_count);
 	ECS_SYSTEM (world, system_lines_onset, EcsOnSet, component_lines, component_count);
 }

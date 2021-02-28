@@ -14,7 +14,7 @@
 
 
 
-ECS_COMPONENT_DECLARE (component_texture);
+
 
 
 static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
@@ -98,7 +98,6 @@ static void system_texture_onset (ecs_iter_t *it)
 
 static void system_texture_init (ecs_world_t * world)
 {
-	ECS_COMPONENT_DEFINE (world, component_texture);
 	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_gl_tex2darray);
 }
 

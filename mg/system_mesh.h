@@ -13,8 +13,7 @@
 #include "systems.h"
 
 
-//OpenGL:
-ECS_COMPONENT_DECLARE (component_mesh);
+
 
 
 static void system_mesh_set_rectangle (ecs_iter_t *it)
@@ -149,7 +148,6 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 
 static void system_mesh_init (ecs_world_t * world)
 {
-	ECS_COMPONENT_DEFINE (world, component_mesh);
 	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, component_mesh);
 	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, component_mesh, component_count, component_vao);
 	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, component_mesh, component_count, component_rectangle);

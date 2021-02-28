@@ -17,15 +17,20 @@
 #include <stdio.h>
 
 
+
+
+#include "mg_comp.h"
+#include "mg_compdef.h"
+
 #include "systems.h"
 #include "system_opengl.h"
 #include "system_mesh.h"
 #include "system_pointcloud.h"
 #include "system_lines.h"
 #include "system_texture.h"
+#include "system_camera.h"
 
 #include "mg_attr.h"
-#include "mg_comp.h"
 #include "eavnet.h"
 #include "eavnet_recv.h"
 
@@ -35,7 +40,6 @@
 #define WIN_W 640
 #define WIN_H 480
 #define WIN_TITLE "Demo3"
-
 
 
 
@@ -177,6 +181,7 @@ int main (int argc, char * argv[])
 	csc_crossos_enable_ansi_color ();
 	ASSERT (argc);
 	ASSERT (argv);
+	srand (1);
 
 
 	uint32_t main_flags = CSC_SDLGLEW_RUNNING;
@@ -192,6 +197,28 @@ int main (int argc, char * argv[])
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	ecs_world_t * world = ecs_init();
+	ECS_COMPONENT_DEFINE (world, component_color);
+	ECS_COMPONENT_DEFINE (world, component_position);
+	ECS_COMPONENT_DEFINE (world, component_scale);
+	ECS_COMPONENT_DEFINE (world, component_quaternion);
+	ECS_COMPONENT_DEFINE (world, component_applyrotation);
+	ECS_COMPONENT_DEFINE (world, component_uv);
+	ECS_COMPONENT_DEFINE (world, component_rectangle);
+	ECS_COMPONENT_DEFINE (world, component_controller);
+	ECS_COMPONENT_DEFINE (world, component_count);
+	ECS_COMPONENT_DEFINE (world, component_stride);
+	ECS_COMPONENT_DEFINE (world, component_transform);
+	ECS_COMPONENT_DEFINE (world, component_filename);
+	ECS_COMPONENT_DEFINE (world, component_texture);
+	ECS_COMPONENT_DEFINE (world, component_pointcloud);
+	ECS_COMPONENT_DEFINE (world, component_va);
+	ECS_COMPONENT_DEFINE (world, component_vao);
+	ECS_COMPONENT_DEFINE (world, component_vbo);
+	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
+	ECS_COMPONENT_DEFINE (world, component_gl_program);
+	ECS_COMPONENT_DEFINE (world, component_lines);
+	ECS_COMPONENT_DEFINE (world, component_mesh);
+
 	systems_init (world);
 	system_opengl_init (world);
 	system_texture_init (world);
