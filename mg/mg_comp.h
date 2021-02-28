@@ -45,6 +45,8 @@ typedef uint32_t component_va;
 typedef uint32_t component_stride;
 typedef uint32_t component_count;
 typedef uint32_t component_vao;
+typedef int32_t component_gl_program;
+typedef char component_filename[256];
 
 
 

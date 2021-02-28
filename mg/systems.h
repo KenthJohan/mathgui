@@ -24,6 +24,7 @@ ECS_COMPONENT_DECLARE (component_quaternion);
 ECS_COMPONENT_DECLARE (component_uv);
 ECS_COMPONENT_DECLARE (component_rectangle);
 ECS_COMPONENT_DECLARE (component_transform);
+ECS_COMPONENT_DECLARE (component_filename);
 
 //Input control:
 ECS_COMPONENT_DECLARE (component_controller);
@@ -120,6 +121,7 @@ static void systems_init (ecs_world_t * world)
 	ECS_COMPONENT_DEFINE (world, component_count);
 	ECS_COMPONENT_DEFINE (world, component_stride);
 	ECS_COMPONENT_DEFINE (world, component_transform);
+	ECS_COMPONENT_DEFINE (world, component_filename);
 
 
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, component_transform);
