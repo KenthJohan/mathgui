@@ -1,11 +1,13 @@
 #pragma once
 #include <flecs.h>
 #include "mg_comp.h"
+ECS_TAG_DECLARE (component_gl_program1);
 ECS_COMPONENT_DECLARE (component_gl_program);
+ECS_COMPONENT_DECLARE (component_gl_shader);
+ECS_COMPONENT_DECLARE (component_gl_tex2darray);
 ECS_COMPONENT_DECLARE (component_vbo);
 ECS_COMPONENT_DECLARE (component_vao);
 ECS_COMPONENT_DECLARE (component_va);
-ECS_COMPONENT_DECLARE (component_gl_tex2darray);
 ECS_COMPONENT_DECLARE (component_lines);
 ECS_COMPONENT_DECLARE (component_texture);
 ECS_COMPONENT_DECLARE (component_pointcloud);

@@ -16,6 +16,9 @@
 
 
 
+
+
+
 static void system_camera_init (ecs_world_t * world)
 {
 

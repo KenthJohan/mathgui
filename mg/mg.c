@@ -39,7 +39,7 @@
 #define WIN_Y SDL_WINDOWPOS_UNDEFINED
 #define WIN_W 640
 #define WIN_H 480
-#define WIN_TITLE "Demo3"
+#define WIN_TITLE "MathGraphic v0.2"
 
 
 
@@ -216,15 +216,19 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, component_vbo);
 	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
 	ECS_COMPONENT_DEFINE (world, component_gl_program);
+	ECS_COMPONENT_DEFINE (world, component_gl_shader);
 	ECS_COMPONENT_DEFINE (world, component_lines);
 	ECS_COMPONENT_DEFINE (world, component_mesh);
 
+
+	//system_opengl_init (world);
+	//return 0;
 	systems_init (world);
-	system_opengl_init (world);
 	system_texture_init (world);
 	system_mesh_init (world);
 	system_pointcloud_init (world);
 	system_lines_init (world);
+	system_camera_init (world);
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
