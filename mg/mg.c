@@ -184,6 +184,7 @@ int main (int argc, char * argv[])
 	ASSERT (argc);
 	ASSERT (argv);
 	srand (1);
+	setbuf (stdout, NULL);
 
 	uint32_t main_flags = CSC_SDLGLEW_RUNNING;
 
