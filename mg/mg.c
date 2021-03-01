@@ -7,7 +7,6 @@
 #include "csc/csc_gl.h"
 #include "csc/csc_math.h"
 #include "csc/csc_sdlglew.h"
-#include "csc/csc_net_win32.h"
 
 //#include "api.h"
 
@@ -188,7 +187,7 @@ int main (int argc, char * argv[])
 
 	SDL_Window * window;
 	SDL_GLContext context;
-	csc_sdlglew_create_window (&window, &context, WIN_TITLE, WIN_X, WIN_Y, WIN_W, WIN_H, SDL_WINDOW_OPENGL);
+	csc_sdlglew_create_window (&window, &context, WIN_TITLE, WIN_X, WIN_Y, WIN_W, WIN_H, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
 	glEnable (GL_VERTEX_PROGRAM_POINT_SIZE);
 	glEnable (GL_BLEND);
