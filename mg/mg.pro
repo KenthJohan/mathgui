@@ -10,6 +10,7 @@ HEADERS += csc/csc_math.h
 HEADERS += csc/csc_qf32.h
 HEADERS += csc/csc_v3f32.h
 HEADERS += csc/csc_v4f32.h
+HEADERS += csc/csc_basic.h
 HEADERS += systems.h
 HEADERS += system_lines.h
 HEADERS += system_opengl.h

@@ -1,7 +1,7 @@
 #pragma once
 #include <flecs.h>
 #include "mg_comp.h"
-ECS_TAG_DECLARE (component_gl_program1);
+ECS_TAG_DECLARE (tag_gl_programlinked);
 ECS_COMPONENT_DECLARE (component_gl_program);
 ECS_COMPONENT_DECLARE (component_gl_shader);
 ECS_COMPONENT_DECLARE (component_gl_tex2darray);

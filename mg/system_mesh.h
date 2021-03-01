@@ -10,6 +10,7 @@
 
 
 #include "mg_comp.h"
+#include "mg_compdef.h"
 #include "systems.h"
 
 

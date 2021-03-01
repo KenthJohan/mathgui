@@ -7,6 +7,7 @@
 #include "csc/csc_gl.h"
 #include "csc/csc_math.h"
 #include "csc/csc_sdlglew.h"
+#include "csc/csc_net_win32.h"
 
 //#include "api.h"
 
@@ -183,7 +184,6 @@ int main (int argc, char * argv[])
 	ASSERT (argv);
 	srand (1);
 
-
 	uint32_t main_flags = CSC_SDLGLEW_RUNNING;
 
 	SDL_Window * window;
@@ -195,6 +195,7 @@ int main (int argc, char * argv[])
 	glEnable (GL_DEPTH_TEST);
 	glLineWidth (4.0f);
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	ecs_world_t * world = ecs_init();
 	ECS_COMPONENT_DEFINE (world, component_color);
@@ -219,11 +220,14 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, component_gl_shader);
 	ECS_COMPONENT_DEFINE (world, component_lines);
 	ECS_COMPONENT_DEFINE (world, component_mesh);
+	ECS_TAG_DEFINE (world, tag_gl_programlinked);
 
 
 	//system_opengl_init (world);
 	//return 0;
+
 	systems_init (world);
+	system_opengl_init (world);
 	system_texture_init (world);
 	system_mesh_init (world);
 	system_pointcloud_init (world);
@@ -232,6 +236,8 @@ int main (int argc, char * argv[])
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
+
+
 
 	struct eavnet_context eavcontext = {0};
 	eavcontext.world = world;

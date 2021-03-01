@@ -42,19 +42,6 @@ static void trigger_gl_tex2darray_onadd (ecs_iter_t *it)
 }
 
 
-static void trigger_gl_program_onadd (ecs_iter_t *it)
-{
-	printf ("[ECS_TRIGGER] trigger_gl_program_onadd: ");
-	ECS_COLUMN (it, component_gl_program, p, 1);
-	for (int32_t i = 0; i < it->count; ++i)
-	{
-		p[i] = glCreateProgram();
-		printf ("%i, ", p[i]);
-	}
-	printf ("\n");
-}
-
-
 static void system_gl_shader_onset (ecs_iter_t *it)
 {
 	printf ("[ECS_SYSTEM] system_gl_shader_onset: ");
@@ -72,7 +59,7 @@ static void system_gl_shader_onset (ecs_iter_t *it)
 
 static void system_gl_program_onset (ecs_iter_t *it)
 {
-	printf ("[ECS_SYSTEM] system_gl_program_onset: ");
+	printf ("[ECS_SYSTEM] system_gl_program_onset: \n");
 	ECS_COLUMN (it, component_gl_program, p, 1);
 	ECS_COLUMN (it, component_gl_shader, s, 2);
 	for (int32_t i = 0; i < it->count; ++i)
@@ -83,6 +70,27 @@ static void system_gl_program_onset (ecs_iter_t *it)
 	printf ("\n");
 }
 
+static void trigger_gl_program_onadd (ecs_iter_t *it)
+{
+	printf ("[ECS_TRIGGER] trigger_gl_program_onadd: ");
+	ECS_COLUMN (it, component_gl_program, p, 1);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		p[i] = glCreateProgram();
+		printf ("%i, ", p[i]);
+	}
+	printf ("\n");
+
+	/*
+	ecs_query_t *query = ecs_query_new (it->world, "SHARED:component_gl_program, component_gl_shader");
+	ecs_iter_t it1 = ecs_query_iter (query);
+	while (ecs_query_next(&it1))
+	{
+		system_gl_program_onset (&it1);
+	}
+	*/
+}
+
 
 
 static void system_opengl_init (ecs_world_t * world)
@@ -91,23 +99,30 @@ static void system_opengl_init (ecs_world_t * world)
 	ECS_TRIGGER (world, trigger_gl_tex2darray_onadd, EcsOnAdd, component_gl_tex2darray);
 	ECS_TRIGGER (world, trigger_gl_program_onadd, EcsOnAdd, component_gl_program);
 	ECS_SYSTEM (world, system_gl_shader_onset, EcsOnSet, component_gl_shader, component_filename);
-	ECS_SYSTEM (world, system_gl_program_onset, EcsOnSet, SHARED:component_gl_program, component_gl_shader);
+	ECS_SYSTEM (world, system_gl_program_onset, EcsOnUpdate, component_gl_program, CASCADE:component_gl_shader);
 
-	ecs_entity_t program = ecs_new (world, 0);
-	ecs_add (world, program, component_gl_program);
-
+/*
 	ecs_entity_t shader1 = ecs_new (world, 0);
-	ecs_add (world, shader1, component_gl_shader);
-	ecs_set (world, shader1, component_filename, {CSC_SRCDIR"shader_line.glvs"});
 	ecs_entity_t shader2 = ecs_new (world, 0);
+	ecs_entity_t shader3 = ecs_new (world, 0);
+	ecs_entity_t program = ecs_new (world, 0);
+
+	ecs_add (world, program, component_gl_program);
+	ecs_add (world, shader1, component_gl_shader);
 	ecs_add (world, shader2, component_gl_shader);
+	ecs_add (world, shader3, component_gl_shader);
+	ecs_set (world, shader1, component_filename, {CSC_SRCDIR"shader_line.glvs"});
 	ecs_set (world, shader2, component_filename, {CSC_SRCDIR"shader_line.glfs"});
+	ecs_set (world, shader3, component_filename, {CSC_SRCDIR"shader_line.glfs"});
 
-	ecs_add_entity (world, shader1, ECS_INSTANCEOF | program);
-	ecs_add_entity (world, shader2, ECS_INSTANCEOF | program);
+	ecs_add_entity (world, program, ECS_CHILDOF | shader1);
+	ecs_add_entity (world, program, ECS_CHILDOF | shader2);
+	ecs_add_entity (world, program, ECS_CHILDOF | shader3);
 
 
-	/*
+	ecs_progress (world, 0);
+
+
 	ecs_set (world, img, component_rectangle, {1.0f, 1.0f});
 
 	ecs_entity_t const * e2 = ecs_bulk_new (world, component_transform, 4);

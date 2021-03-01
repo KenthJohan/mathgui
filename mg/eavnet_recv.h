@@ -17,6 +17,7 @@
 #include "systems.h"
 #include "mg_attr.h"
 #include "mg_comp.h"
+#include "mg_compdef.h"
 
 
 
