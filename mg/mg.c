@@ -39,7 +39,7 @@
 #define WIN_Y SDL_WINDOWPOS_UNDEFINED
 #define WIN_W 640
 #define WIN_H 480
-#define WIN_TITLE "MathGraphic v0.2"
+#define WIN_TITLE "MathGraphic v0.3"
 
 
 
@@ -145,6 +145,8 @@ static void test_ecs_onset (ecs_world_t * world)
 
 static void test_ecs_addlines (ecs_world_t * world)
 {
+	printf ("[INFO] Adding origin. (x,y,z) = (red, green, blue)\n");
+
 	ecs_entity_t e = ecs_new (world, 0);
 	ecs_add (world, e, component_lines);
 	ecs_set (world, e, component_count, {6});
