@@ -65,13 +65,6 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		uint32_t size = (*count) * sizeof (component_position);
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vbop);
 		component_position * p = ptr;
-		for (int i = 0; i < 1; ++i)
-		{
-			p[i][0] = 0.0f;
-			p[i][1] = 0.0f;
-			p[i][2] = 0.0f;
-			p[i][3] = 40.0f;
-		}
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
 		break;}
 	case MG_POINTCLOUD_COL:{
@@ -84,7 +77,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ASSERT (glIsBuffer (cloud->vboc));
 		uint32_t size = (*count) * sizeof (component_color);
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vboc);
-		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), ptr);
+		component_color * c = ptr;
+		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
 		break;}
 	case MG_MESH:
 		ecs_add (world, e, component_mesh);

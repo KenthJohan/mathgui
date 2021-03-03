@@ -12,9 +12,9 @@ void main()
 {
 	fragcolor = texture(tex0, vec3(texcoord.xy, texcoord.z));
 	/*
-	*/
 	fragcolor.r += 0.1;
 	fragcolor.g += 0.1;
 	fragcolor.b += 0.1;
 	fragcolor.a = 1.0;
+	*/
 }

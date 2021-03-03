@@ -155,11 +155,11 @@ static void test_ecs_addlines (ecs_world_t * world)
 	component_position p[6] =
 	{
 	{0.0f, 0.0f, 0.0f, 1.0f},
-	{1.0f, 0.0f, 0.0f, 1.0f},
+	{10.0f, 0.0f, 0.0f, 1.0f},
 	{0.0f, 0.0f, 0.0f, 1.0f},
-	{0.0f, 1.0f, 0.0f, 1.0f},
+	{0.0f, 10.0f, 0.0f, 1.0f},
 	{0.0f, 0.0f, 0.0f, 1.0f},
-	{0.0f, 0.0f, 1.0f, 1.0f},
+	{0.0f, 0.0f, 10.0f, 1.0f},
 	};
 	glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
 	glBufferSubData (GL_ARRAY_BUFFER, 0, sizeof(p), p);
@@ -196,7 +196,7 @@ int main (int argc, char * argv[])
 	glEnable (GL_BLEND);
 	glEnable (GL_DEPTH_TEST);
 	glLineWidth (4.0f);
-	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	ecs_world_t * world = ecs_init();
@@ -231,8 +231,8 @@ int main (int argc, char * argv[])
 	systems_init (world);
 	system_opengl_init (world);
 	system_texture_init (world);
-	system_mesh_init (world);
 	system_pointcloud_init (world);
+	system_mesh_init (world);
 	system_lines_init (world);
 	system_camera_init (world);
 	//test_ecs_onset (world);
@@ -267,8 +267,16 @@ int main (int argc, char * argv[])
 			//Control graphics camera
 			csc_sdl_motion_wasd (keyboard, global_gcam.d);
 			csc_sdl_motion_pyr (keyboard, global_gcam.pyrd);
-			v3f32_mul (global_gcam.d, global_gcam.d, 0.01f);
-			v3f32_mul (global_gcam.pyrd, global_gcam.pyrd, 0.01f);
+			if (SDL_GetModState() & KMOD_CAPS)
+			{
+				v3f32_mul (global_gcam.d, global_gcam.d, 0.001f);
+				v3f32_mul (global_gcam.pyrd, global_gcam.pyrd, 0.001f);
+			}
+			else
+			{
+				v3f32_mul (global_gcam.d, global_gcam.d, 0.01f);
+				v3f32_mul (global_gcam.pyrd, global_gcam.pyrd, 0.01f);
+			}
 			csc_gcam_update (&global_gcam);
 		}
 
