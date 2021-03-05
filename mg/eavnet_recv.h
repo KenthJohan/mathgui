@@ -80,6 +80,35 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		component_color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
 		break;}
+	case MG_LINES:
+		ecs_add (world, e, component_lines);
+		break;
+	case MG_LINES_POS:{
+		//ecs_add (world, e, component_pointcloud);
+		//ecs_progress (world, 0);
+		component_lines const * lines = ecs_get (world, e, component_lines);
+		component_count const * count = ecs_get (world, e, component_count);
+		ASSERT_NOTNULL (lines);
+		ASSERT_NOTNULL (count);
+		ASSERT (glIsBuffer (lines->vbop));
+		uint32_t size = (*count) * sizeof (component_position);
+		glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
+		component_position * p = ptr;
+		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
+		break;}
+	case MG_LINES_COL:{
+		//ecs_add (world, e, component_pointcloud);
+		//ecs_progress (world, 0);
+		component_lines const * lines = ecs_get (world, e, component_lines);
+		component_count const * count = ecs_get (world, e, component_count);
+		ASSERT_NOTNULL (lines);
+		ASSERT_NOTNULL (count);
+		ASSERT (glIsBuffer (lines->vboc));
+		uint32_t size = (*count) * sizeof (component_color);
+		glBindBuffer (GL_ARRAY_BUFFER, lines->vboc);
+		component_color * c = ptr;
+		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
+		break;}
 	case MG_MESH:
 		ecs_add (world, e, component_mesh);
 		ecs_add (world, e, component_vao);
@@ -112,7 +141,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		component_gl_tex2darray const * tex = ecs_get (world, e, component_gl_tex2darray);
 		glActiveTexture (GL_TEXTURE0 + texture->unit);
 		glBindTexture (GL_TEXTURE_2D_ARRAY, *tex);//Depends on glActiveTexture()
-		ASSERT (value_size == (texture->width * texture->height * sizeof (uint32_t)));
+		ASSERT (value_size <= (texture->width * texture->height * sizeof (uint32_t)));
 		{
 			glTexSubImage3D (GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, texture->width, texture->height, 1, GL_RGBA, GL_UNSIGNED_BYTE, ptr);
 		}
