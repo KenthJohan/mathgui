@@ -20,6 +20,10 @@
 static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
 {
 	memset (data, 0, w * h * c);
+	for (uint32_t i = 0; i < w*h*c; i += c)
+	{
+		data[i+3] = UINT8_MAX;
+	}
 	/*
 	for (int x = 0; x < width; ++x)
 	for (int y = 0; y < height; ++y)

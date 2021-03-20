@@ -86,23 +86,23 @@ static void system_mesh_draw (ecs_iter_t *it)
 
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		float m[4*4];
-		float ms[4*4];
-		float mt[4*4];
-		float mr[4*4];
-		m4f32_identity (m);
-		m4f32_identity (ms);
-		m4f32_identity (mr);
-		m4f32_identity (mt);
-		m4f32_scale (ms, s[i]);
-		qf32_m4 (mr, q[i]);
-		m4f32_translation (mt, p[i]);
-		m4f32_mul (m, ms, m); //Apply scale
-		m4f32_mul (m, mr, m); //Apply rotation
-		m4f32_mul (m, mt, m); //Apply translation
+		struct m4f32 m;
+		struct m4f32 ms;
+		struct m4f32 mt;
+		struct m4f32 mr;
+		m4f32_identity (&m);
+		m4f32_identity (&ms);
+		m4f32_identity (&mr);
+		m4f32_identity (&mt);
+		m4f32_scale (&ms, s[i]);
+		qf32_m4 (&mr, q[i]);
+		m4f32_translation (&mt, p[i]);
+		m4f32_mul (&m, &ms, &m); //Apply scale
+		m4f32_mul (&m, &mr, &m); //Apply rotation
+		m4f32_mul (&m, &mt, &m); //Apply translation
 		//m4f32_print (mt, stdout);
-		m4f32_mul (m, global_gcam.mvp, m);
-		glUniformMatrix4fv (global_gluniform[GLUNIFORM_MESH_MVP], 1, GL_FALSE, (const GLfloat *) m);
+		m4f32_mul (&m, &global_gcam.mvp, &m);
+		glUniformMatrix4fv (global_gluniform[GLUNIFORM_MESH_MVP], 1, GL_FALSE, (const GLfloat *) &m);
 		glDrawArrays (GL_TRIANGLES, 0, count[0]);
 	}
 }
@@ -123,10 +123,10 @@ static void system_mesh_draw1 (ecs_iter_t *it)
 
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		float m[4*4];
+		struct m4f32 m;
 		//m4f32_print (mt, stdout);
-		m4f32_mul (m, global_gcam.mvp, t[i]);
-		glUniformMatrix4fv (global_gluniform[GLUNIFORM_MESH_MVP], 1, GL_FALSE, (const GLfloat *) m);
+		m4f32_mul (&m, &global_gcam.mvp, t + i);
+		glUniformMatrix4fv (global_gluniform[GLUNIFORM_MESH_MVP], 1, GL_FALSE, (const GLfloat *) &m);
 		glDrawArrays (GL_TRIANGLES, 0, count[0]);
 	}
 }

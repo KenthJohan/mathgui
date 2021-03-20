@@ -236,7 +236,7 @@ int main (int argc, char * argv[])
 	system_lines_init (world);
 	system_camera_init (world);
 	//test_ecs_onset (world);
-	//test_ecs_addents (world);//For testing
+	test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
 
 

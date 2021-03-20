@@ -47,7 +47,7 @@ static void trigger_transform (ecs_iter_t *it)
 	ECS_COLUMN (it, component_transform, t, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		m4f32_identity (t[i]);
+		m4f32_identity (t + i);
 	}
 	printf ("\n");
 }
@@ -73,20 +73,20 @@ static void system_transform_onset (ecs_iter_t *it)
 	ECS_COLUMN (it, component_transform, t, 4);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		float * m = t[i];
-		float ms[4*4];
-		float mt[4*4];
-		float mr[4*4];
+		struct m4f32 * m = t + i;
+		struct m4f32 ms;
+		struct m4f32 mt;
+		struct m4f32 mr;
 		m4f32_identity (m);
-		m4f32_identity (ms);
-		m4f32_identity (mr);
-		m4f32_identity (mt);
-		m4f32_scale (ms, s[i]);
-		qf32_m4 (mr, q[i]);
-		m4f32_translation (mt, p[i]);
-		m4f32_mul (m, ms, m); //Apply scale
-		m4f32_mul (m, mr, m); //Apply rotation
-		m4f32_mul (m, mt, m); //Apply translation
+		m4f32_identity (&ms);
+		m4f32_identity (&mr);
+		m4f32_identity (&mt);
+		m4f32_scale (&ms, s[i]);
+		qf32_m4 (&mr, q[i]);
+		m4f32_translation (&mt, p[i]);
+		m4f32_mul (m, &ms, m); //Apply scale
+		m4f32_mul (m, &mr, m); //Apply rotation
+		m4f32_mul (m, &mt, m); //Apply translation
 	}
 }
 

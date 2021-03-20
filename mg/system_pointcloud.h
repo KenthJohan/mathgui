@@ -59,7 +59,7 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		glBindVertexArray (pc[i].vao);
-		glUniformMatrix4fv (global_gluniform[GLUNIFORM_POINT_MVP], 1, GL_FALSE, (const GLfloat *) global_gcam.mvp);
+		glUniformMatrix4fv (global_gluniform[GLUNIFORM_POINT_MVP], 1, GL_FALSE, (const GLfloat *) &global_gcam.mvp);
 		glDrawArrays (GL_POINTS, 0, c[i]);
 	}
 }

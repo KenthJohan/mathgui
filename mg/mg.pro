@@ -8,8 +8,17 @@ DEFINES += CSC_SRCDIR=\\\"../mg/\\\"
 
 HEADERS += csc/csc_math.h
 HEADERS += csc/csc_qf32.h
+HEADERS += csc/csc_mf32.h
+HEADERS += csc/csc_vf32.h
+HEADERS += csc/csc_vf32_misc.h
+HEADERS += csc/csc_vu32.h
+HEADERS += csc/csc_f32.h
+HEADERS += csc/csc_vf32_print.h
+HEADERS += csc/csc_vf32_convolution.h
 HEADERS += csc/csc_v3f32.h
 HEADERS += csc/csc_v4f32.h
+HEADERS += csc/csc_m3f32.h
+HEADERS += csc/csc_m4f32.h
 HEADERS += csc/csc_basic.h
 HEADERS += csc/csc_gcam.h
 HEADERS += systems.h
