@@ -102,10 +102,10 @@ static void test_eavnet (struct eavnet_context * ctx)
 		component_position * p = malloc (size);
 		for (uint32_t i = 0; i < count; ++i)
 		{
-			p[i][0] = 10.0f * (float)i / rand();
-			p[i][1] = 1.0f * (float)i / rand();
-			p[i][2] = 10.0f * (float)i / rand();
-			p[i][3] = 100.0f;
+			p[i].x = 10.0f * (float)i / rand();
+			p[i].y = 1.0f * (float)i / rand();
+			p[i].z = 10.0f * (float)i / rand();
+			p[i].w = 100.0f;
 		}
 		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_POINTCLOUD_POS, p, size);
 		free (p);
@@ -265,17 +265,17 @@ int main (int argc, char * argv[])
 
 		{
 			//Control graphics camera
-			csc_sdl_motion_wasd (keyboard, global_gcam.d);
-			csc_sdl_motion_pyr (keyboard, global_gcam.pyrd);
+			csc_sdl_motion_wasd (keyboard, &global_gcam.d);
+			csc_sdl_motion_pyr (keyboard, &global_gcam.pyrd);
 			if (SDL_GetModState() & KMOD_CAPS)
 			{
-				v3f32_mul (global_gcam.d, global_gcam.d, 0.001f);
-				v3f32_mul (global_gcam.pyrd, global_gcam.pyrd, 0.001f);
+				v4f32_mul (&global_gcam.d, &global_gcam.d, 0.001f);
+				v3f32_mul (&global_gcam.pyrd, &global_gcam.pyrd, 0.001f);
 			}
 			else
 			{
-				v3f32_mul (global_gcam.d, global_gcam.d, 0.01f);
-				v3f32_mul (global_gcam.pyrd, global_gcam.pyrd, 0.01f);
+				v4f32_mul (&global_gcam.d, &global_gcam.d, 0.01f);
+				v3f32_mul (&global_gcam.pyrd, &global_gcam.pyrd, 0.01f);
 			}
 			csc_gcam_update (&global_gcam);
 		}

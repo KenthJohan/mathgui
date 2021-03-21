@@ -59,7 +59,7 @@ static void system_apply_rotation (ecs_iter_t *it)
 	ECS_COLUMN (it, component_controller, c, 2);//Singleton
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		qf32_rotate2_xyza (q[i], c->keyboard[SDL_SCANCODE_1], c->keyboard[SDL_SCANCODE_2], c->keyboard[SDL_SCANCODE_3], 0.01f);
+		qf32_rotate2_xyza (q + i, c->keyboard[SDL_SCANCODE_1], c->keyboard[SDL_SCANCODE_2], c->keyboard[SDL_SCANCODE_3], 0.01f);
 	}
 }
 
@@ -81,9 +81,9 @@ static void system_transform_onset (ecs_iter_t *it)
 		m4f32_identity (&ms);
 		m4f32_identity (&mr);
 		m4f32_identity (&mt);
-		m4f32_scale (&ms, s[i]);
-		qf32_m4 (&mr, q[i]);
-		m4f32_translation (&mt, p[i]);
+		m4f32_scale (&ms, s + i);
+		qf32_m4 (&mr, q + i);
+		m4f32_translation (&mt, p + i);
 		m4f32_mul (m, &ms, m); //Apply scale
 		m4f32_mul (m, &mr, m); //Apply rotation
 		m4f32_mul (m, &mt, m); //Apply translation
@@ -111,7 +111,7 @@ static void systems_init (ecs_world_t * world)
 	global_gluniform[GLUNIFORM_MESH_TEX0] = glGetUniformLocation (global_glprogram[GLPROGRAM_MESH], "tex0");
 
 	csc_gcam_init (&global_gcam);
-	v4f32_set_xyzw (global_gcam.p, 0.0f, 0.0f, -1.0f, 1.0f);
+	global_gcam.p.z = -1.0f;
 }
 
 
