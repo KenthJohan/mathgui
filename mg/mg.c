@@ -269,12 +269,12 @@ int main (int argc, char * argv[])
 			csc_sdl_motion_pyr (keyboard, &global_gcam.pyrd);
 			if (SDL_GetModState() & KMOD_CAPS)
 			{
-				v4f32_mul (&global_gcam.d, &global_gcam.d, 0.001f);
+				v3f32_mul (&global_gcam.d, &global_gcam.d, 0.001f);
 				v3f32_mul (&global_gcam.pyrd, &global_gcam.pyrd, 0.001f);
 			}
 			else
 			{
-				v4f32_mul (&global_gcam.d, &global_gcam.d, 0.01f);
+				v3f32_mul (&global_gcam.d, &global_gcam.d, 0.01f);
 				v3f32_mul (&global_gcam.pyrd, &global_gcam.pyrd, 0.01f);
 			}
 			csc_gcam_update (&global_gcam);

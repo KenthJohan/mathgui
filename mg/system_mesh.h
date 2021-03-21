@@ -96,7 +96,7 @@ static void system_mesh_draw (ecs_iter_t *it)
 		m4f32_identity (&mt);
 		m4f32_scale (&ms, s + i);
 		qf32_m4 (&mr, q + i);
-		m4f32_translation (&mt, p + i);
+		m4f32_translation4 (&mt, p + i);
 		m4f32_mul (&m, &ms, &m); //Apply scale
 		m4f32_mul (&m, &mr, &m); //Apply rotation
 		m4f32_mul (&m, &mt, &m); //Apply translation
