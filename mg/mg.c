@@ -266,16 +266,16 @@ int main (int argc, char * argv[])
 		{
 			//Control graphics camera
 			csc_sdl_motion_wasd (keyboard, &global_gcam.d);
-			csc_sdl_motion_pyr (keyboard, &global_gcam.pyrd);
+			csc_sdl_motion_pyr (keyboard, &global_gcam.pyr_delta);
 			if (SDL_GetModState() & KMOD_CAPS)
 			{
 				v3f32_mul (&global_gcam.d, &global_gcam.d, 0.001f);
-				v3f32_mul (&global_gcam.pyrd, &global_gcam.pyrd, 0.001f);
+				v3f32_mul (&global_gcam.pyr_delta, &global_gcam.pyr_delta, 0.001f);
 			}
 			else
 			{
 				v3f32_mul (&global_gcam.d, &global_gcam.d, 0.01f);
-				v3f32_mul (&global_gcam.pyrd, &global_gcam.pyrd, 0.01f);
+				v3f32_mul (&global_gcam.pyr_delta, &global_gcam.pyr_delta, 0.01f);
 			}
 			csc_gcam_update (&global_gcam);
 		}
