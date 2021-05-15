@@ -30,7 +30,7 @@ static void system_mesh_set_rectangle (ecs_iter_t *it)
 		glBindBuffer (GL_ARRAY_BUFFER, img[i].vbop);
 		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_position), NULL, GL_DYNAMIC_DRAW);
 		component_position p[6];
-		csc_gl_make_rectangle_pos ((void*)p, 0.0f, 0.0f, 0.0f, 0.0f, wh[i][0], wh[i][1], 4);
+		csc_gl_make_rectangle_pos ((void*)p, 0.0f, 0.0f, 0.0f, 0.0f, wh[i].x, wh[i].y, 4);
 		glBufferSubData (GL_ARRAY_BUFFER, 0, 6 * sizeof (component_position), p);
 		//printf ("[ECS_SYSTEM] system_mesh_set_rectangle %i:%i\n", img[i].vbot, count[i]);
 		glBindBuffer (GL_ARRAY_BUFFER, img[i].vbot);
