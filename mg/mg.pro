@@ -54,7 +54,7 @@ SOURCES += ../flecs/flecs.c
 
 
 INCLUDEPATH += ../flecs
-INCLUDEPATH += ../flecs/flecs-os_api-posix/include
+#INCLUDEPATH += ../flecs/flecs-os_api-posix/include
 
 
 #LIBS += -lnng

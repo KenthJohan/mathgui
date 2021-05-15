@@ -11,7 +11,6 @@
 //#include "api.h"
 
 #include <flecs.h>
-#include <posix_set_os_api.h>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <stdio.h>

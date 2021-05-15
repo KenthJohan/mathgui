@@ -20,9 +20,9 @@
 static void system_mesh_set_rectangle (ecs_iter_t *it)
 {
 	printf ("[ECS_SYSTEM] system_mesh_set_rectangle\n");
-	ECS_COLUMN (it, component_mesh, img, 1);
-	ECS_COLUMN (it, component_count, count, 2);
-	ECS_COLUMN (it, component_rectangle, wh, 3);
+	component_mesh * img = ecs_term(it, component_mesh, 1);
+	component_count * count = ecs_term(it, component_count, 2);
+	component_rectangle * wh = ecs_term(it, component_rectangle, 3);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		ASSERT (count[i] == 6);
