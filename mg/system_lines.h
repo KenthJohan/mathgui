@@ -7,6 +7,7 @@
 #include "csc/csc_gl.h"
 #include "csc/csc_gcam.h"
 #include "csc/csc_qf32.h"
+#include "csc/csc_vu32.h"
 
 
 #include "mg_comp.h"

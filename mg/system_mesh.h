@@ -86,10 +86,10 @@ static void system_mesh_draw (ecs_iter_t *it)
 
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		struct m4f32 m;
-		struct m4f32 ms;
-		struct m4f32 mt;
-		struct m4f32 mr;
+		m4f32 m;
+		m4f32 ms;
+		m4f32 mt;
+		m4f32 mr;
 		m4f32_identity (&m);
 		m4f32_identity (&ms);
 		m4f32_identity (&mr);
@@ -123,7 +123,7 @@ static void system_mesh_draw1 (ecs_iter_t *it)
 
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		struct m4f32 m;
+		m4f32 m;
 		//m4f32_print (mt, stdout);
 		m4f32_mul (&m, &global_gcam.mvp, t + i);
 		glUniformMatrix4fv (global_gluniform[GLUNIFORM_MESH_MVP], 1, GL_FALSE, (const GLfloat *) &m);

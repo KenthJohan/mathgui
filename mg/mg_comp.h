@@ -5,13 +5,13 @@
 
 
 typedef uint32_t component_color;
-typedef struct v4f32 component_position;
-typedef struct v4f32 component_scale;
-typedef struct qf32 component_quaternion;
-typedef struct v4f32 component_applyrotation;
-typedef struct v2f32 component_uv;
-typedef struct v2f32 component_rectangle;
-typedef struct m4f32 component_transform;
+typedef v4f32 component_position;
+typedef v4f32 component_scale;
+typedef qf32 component_quaternion;
+typedef v4f32 component_applyrotation;
+typedef v2f32 component_uv;
+typedef v2f32 component_rectangle;
+typedef m4f32 component_transform;
 typedef struct component_texture
 {
 	uint32_t unit;

@@ -73,10 +73,10 @@ static void system_transform_onset (ecs_iter_t *it)
 	ECS_COLUMN (it, component_transform, t, 4);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		struct m4f32 * m = t + i;
-		struct m4f32 ms;
-		struct m4f32 mt;
-		struct m4f32 mr;
+		m4f32 * m = t + i;
+		m4f32 ms;
+		m4f32 mt;
+		m4f32 mr;
 		m4f32_identity (m);
 		m4f32_identity (&ms);
 		m4f32_identity (&mr);
