@@ -65,7 +65,6 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 		GLsizei count = c[i];
 		glBindVertexArray (pc[i].vao);
 		glUniformMatrix4fv (global_gluniform[GLUNIFORM_POINT_MVP], 1, GL_FALSE, (const GLfloat *) &global_gcam.mvp);
-		count = 5914;
 		glDrawArrays (GL_POINTS, first, count);
 	}
 }
