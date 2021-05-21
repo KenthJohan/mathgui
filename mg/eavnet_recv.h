@@ -47,13 +47,24 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	ecs_entity_t e = ctx->entities[entity];
 	switch (attribute)
 	{
-	case MG_COUNT:{
-		uint32_t * a = ptr;
-		ecs_set (world, e, component_capacity, {*a});
-		break;}
+	case MG_MESH:
+		ecs_add (world, e, component_mesh);
+		ecs_add (world, e, component_vao);
+		break;
+
 	case MG_POINTCLOUD:
 		ecs_add (world, e, component_pointcloud);
 		break;
+
+	case MG_LINES:
+		ecs_add (world, e, component_lines);
+		break;
+
+	case MG_CAPACITY:{
+		uint32_t * a = ptr;
+		ecs_set (world, e, component_capacity, {*a});
+		break;}
+
 	case MG_POINTCLOUD_POS:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
@@ -69,6 +80,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
 		ecs_set (world, e, component_offset, {0});
 		break;}
+
 	case MG_POINTCLOUD_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
@@ -84,9 +96,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
 		ecs_set (world, e, component_offset, {0});
 		break;}
-	case MG_LINES:
-		ecs_add (world, e, component_lines);
-		break;
+
 	case MG_LINES_POS:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
@@ -102,6 +112,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
 		ecs_set (world, e, component_offset, {0});
 		break;}
+
 	case MG_LINES_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
@@ -117,33 +128,37 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
 		ecs_set (world, e, component_offset, {0});
 		break;}
-	case MG_MESH:
-		ecs_add (world, e, component_mesh);
-		ecs_add (world, e, component_vao);
-		break;
+
 	case MG_TEXTURE:{
 		ecs_add (world, e, component_gl_tex2darray);
 		ecs_set_ptr (world, e, component_texture, ptr);
 		break;}
+
 	case MG_POSITION:{
 		ecs_set_ptr (world, e, component_position, ptr);
 		break;}
+
 	case MG_SCALE:{
 		ecs_set_ptr (world, e, component_scale, ptr);
 		break;}
+
 	case MG_QUATERNION:{
 		ecs_set_ptr (world, e, component_quaternion, ptr);
 		break;}
+
 	case MG_ADD_INSTANCEOF:{
 		uint32_t * a = ptr;
 		ecs_add_entity (world, e, ECS_INSTANCEOF | ctx->entities[*a]);
 		break;}
+
 	case MG_RECTANGLE:{
 		ecs_set_ptr (world, e, component_rectangle, ptr);
 		break;}
+
 	case MG_TRANSFORM:{
 		ecs_set_ptr (world, e, component_transform, ptr);
 		break;}
+
 	case MG_TEXTURE_CONTENT:{
 		component_texture const * texture = ecs_get (world, e, component_texture);
 		component_gl_tex2darray const * tex = ecs_get (world, e, component_gl_tex2darray);

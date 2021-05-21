@@ -2,7 +2,7 @@
 
 enum mg_attr
 {
-	MG_COUNT,
+	MG_CAPACITY,
 
 	MG_POINTCLOUD,
 	MG_POINTCLOUD_POS,
