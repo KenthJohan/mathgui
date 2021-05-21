@@ -23,7 +23,7 @@ static void system_pointcloud_set (ecs_iter_t *it)
 {
 	printf ("[ECS_SYSTEM] system_pointcloud_set\n");
 	ECS_COLUMN (it, component_pointcloud, pc, 1);
-	ECS_COLUMN (it, component_count, c, 2);
+	ECS_COLUMN (it, component_capacity, c, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		void * data;
@@ -55,21 +55,22 @@ static void system_pointcloud_set (ecs_iter_t *it)
 static void system_pointcloud_draw (ecs_iter_t *it)
 {
 	ECS_COLUMN (it, component_pointcloud, pc, 1);
-	ECS_COLUMN (it, component_count, c, 2);
+	ECS_COLUMN (it, component_offset, o, 2);
+	ECS_COLUMN (it, component_count, c, 3);
 	glUseProgram (global_glprogram[GLPROGRAM_POINT]);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		glBindVertexArray (pc[i].vao);
 		glUniformMatrix4fv (global_gluniform[GLUNIFORM_POINT_MVP], 1, GL_FALSE, (const GLfloat *) &global_gcam.mvp);
-		glDrawArrays (GL_POINTS, 0, c[i]);
+		glDrawArrays (GL_POINTS, o[i], c[i]);
 	}
 }
 
 
 static void system_pointcloud_init (ecs_world_t * world)
 {
-	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, component_pointcloud, component_count);
-	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, component_pointcloud, component_count);
+	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, component_pointcloud, component_capacity);
+	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, component_pointcloud, component_offset, component_count);
 }
 
 

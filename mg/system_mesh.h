@@ -21,7 +21,7 @@ static void system_mesh_set_rectangle (ecs_iter_t *it)
 {
 	printf ("[ECS_SYSTEM] system_mesh_set_rectangle\n");
 	component_mesh * img = ecs_term(it, component_mesh, 1);
-	component_count * count = ecs_term(it, component_count, 2);
+	component_capacity * count = ecs_term(it, component_capacity, 2);
 	component_rectangle * wh = ecs_term(it, component_rectangle, 3);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -46,7 +46,7 @@ static void system_mesh_set (ecs_iter_t *it)
 {
 	printf ("[ECS_SYSTEM] system_mesh_set\n");
 	ECS_COLUMN (it, component_mesh, mesh, 1);
-	ECS_COLUMN (it, component_count, count, 2);
+	ECS_COLUMN (it, component_capacity, count, 2);
 	ECS_COLUMN (it, component_vao, vao, 3);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -72,7 +72,7 @@ static void system_mesh_set (ecs_iter_t *it)
 static void system_mesh_draw (ecs_iter_t *it)
 {
 	ECS_COLUMN (it, component_mesh, img, 1);//Shared
-	ECS_COLUMN (it, component_count, count, 2);//Shared
+	ECS_COLUMN (it, component_capacity, count, 2);//Shared
 	ECS_COLUMN (it, component_vao, vao, 3);//Shared
 	ECS_COLUMN (it, component_gl_tex2darray, tbo, 4);//Shared
 	ECS_COLUMN (it, component_position, p, 5);
@@ -111,7 +111,7 @@ static void system_mesh_draw (ecs_iter_t *it)
 static void system_mesh_draw1 (ecs_iter_t *it)
 {
 	ECS_COLUMN (it, component_mesh, img, 1);//Shared
-	ECS_COLUMN (it, component_count, count, 2);//Shared
+	ECS_COLUMN (it, component_capacity, count, 2);//Shared
 	ECS_COLUMN (it, component_vao, vao, 3);//Shared
 	ECS_COLUMN (it, component_gl_tex2darray, tbo, 4);//Shared
 	ECS_COLUMN (it, component_transform, t, 5);
@@ -150,9 +150,9 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 static void system_mesh_init (ecs_world_t * world)
 {
 	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, component_mesh);
-	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, component_mesh, component_count, component_vao);
-	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, component_mesh, component_count, component_rectangle);
-	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_gl_tex2darray, component_transform);
+	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, component_mesh, component_capacity, component_vao);
+	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, component_mesh, component_capacity, component_rectangle);
+	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:component_mesh, SHARED:component_capacity, SHARED:component_vao, SHARED:component_gl_tex2darray, component_transform);
 	//ECS_SYSTEM (world, system_mesh_draw, EcsOnUpdate, SHARED:component_mesh, SHARED:component_count, SHARED:component_vao, SHARED:component_gl_tex2darray, component_position, component_scale, component_quaternion);
 }
 

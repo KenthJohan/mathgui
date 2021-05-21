@@ -49,7 +49,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	{
 	case MG_COUNT:{
 		uint32_t * a = ptr;
-		ecs_set (world, e, component_count, {*a});
+		ecs_set (world, e, component_capacity, {*a});
 		break;}
 	case MG_POINTCLOUD:
 		ecs_add (world, e, component_pointcloud);
@@ -58,7 +58,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
 		component_pointcloud const * cloud = ecs_get (world, e, component_pointcloud);
-		component_count const * count = ecs_get (world, e, component_count);
+		component_capacity const * count = ecs_get (world, e, component_capacity);
 		ASSERT_NOTNULL (cloud);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (cloud->vbop));
@@ -66,12 +66,14 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vbop);
 		component_position * p = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
+		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
+		ecs_set (world, e, component_offset, {0});
 		break;}
 	case MG_POINTCLOUD_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
 		component_pointcloud const * cloud = ecs_get (world, e, component_pointcloud);
-		component_count const * count = ecs_get (world, e, component_count);
+		component_capacity const * count = ecs_get (world, e, component_capacity);
 		ASSERT_NOTNULL (cloud);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (cloud->vboc));
@@ -79,6 +81,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vboc);
 		component_color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
+		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
+		ecs_set (world, e, component_offset, {0});
 		break;}
 	case MG_LINES:
 		ecs_add (world, e, component_lines);
@@ -87,7 +91,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
 		component_lines const * lines = ecs_get (world, e, component_lines);
-		component_count const * count = ecs_get (world, e, component_count);
+		component_capacity const * count = ecs_get (world, e, component_capacity);
 		ASSERT_NOTNULL (lines);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (lines->vbop));
@@ -95,12 +99,14 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
 		component_position * p = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
+		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
+		ecs_set (world, e, component_offset, {0});
 		break;}
 	case MG_LINES_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
 		component_lines const * lines = ecs_get (world, e, component_lines);
-		component_count const * count = ecs_get (world, e, component_count);
+		component_capacity const * count = ecs_get (world, e, component_capacity);
 		ASSERT_NOTNULL (lines);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (lines->vboc));
@@ -108,6 +114,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, lines->vboc);
 		component_color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
+		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
+		ecs_set (world, e, component_offset, {0});
 		break;}
 	case MG_MESH:
 		ecs_add (world, e, component_mesh);

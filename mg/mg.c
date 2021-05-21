@@ -57,7 +57,7 @@ static void test_ecs_addents (ecs_world_t * world)
 	ecs_set (world, mytexture3, component_texture, {.unit = 0, .width = 200, .height = 200, .depth = 4});
 
 	ECS_ENTITY (world, img, component_mesh, component_vao);
-	ecs_set (world, img, component_count, {6});
+	ecs_set (world, img, component_capacity, {6});
 	ecs_set (world, img, component_rectangle, {1.0f, 1.0f});
 
 	ecs_entity_t const * e2 = ecs_bulk_new (world, component_transform, 4);
@@ -96,7 +96,7 @@ static void test_eavnet (struct eavnet_context * ctx)
 	{
 		uint32_t count = 1000;
 		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_POINTCLOUD, NULL, 0);
-		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_COUNT, &(component_count){count}, 0);
+		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_COUNT, &(component_capacity){count}, 0);
 		uint32_t size = count * sizeof (component_position);
 		component_position * p = malloc (size);
 		for (uint32_t i = 0; i < count; ++i)
@@ -113,7 +113,7 @@ static void test_eavnet (struct eavnet_context * ctx)
 	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(component_texture){0, 100, 100, 1}, 0);
 	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(component_texture){0, 300, 300, 1}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_MESH, NULL, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_COUNT, &(component_count){6}, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_COUNT, &(component_capacity){6}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(component_rectangle){1.0f, 1.0f}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION,&(component_position){3.0f, 1.0f, 0.0f, 1.0f}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE, &(component_position){0.3f, 0.3f, 0.0f, 1.0f}, 0);
@@ -138,7 +138,7 @@ static void test_ecs_onset (ecs_world_t * world)
 	ecs_add (world, e, component_scale);
 
 
-	ecs_set (world, e, component_scale, {1.0f, 2.0f, 1.0f, 1.0f});
+	ecs_set (world, e, component_scale, {{1.0f, 2.0f, 1.0f, 1.0f}});
 }
 
 
@@ -148,17 +148,19 @@ static void test_ecs_addlines (ecs_world_t * world)
 
 	ecs_entity_t e = ecs_new (world, 0);
 	ecs_add (world, e, component_lines);
+	ecs_set (world, e, component_capacity, {6});
+	ecs_set (world, e, component_offset, {0});
 	ecs_set (world, e, component_count, {6});
 	component_lines const * lines = ecs_get (world, e, component_lines);
 
 	component_position p[6] =
 	{
-	{0.0f, 0.0f, 0.0f, 1.0f},
-	{10.0f, 0.0f, 0.0f, 1.0f},
-	{0.0f, 0.0f, 0.0f, 1.0f},
-	{0.0f, 10.0f, 0.0f, 1.0f},
-	{0.0f, 0.0f, 0.0f, 1.0f},
-	{0.0f, 0.0f, 10.0f, 1.0f},
+	{{0.0f, 0.0f, 0.0f, 1.0f}},
+	{{10.0f, 0.0f, 0.0f, 1.0f}},
+	{{0.0f, 0.0f, 0.0f, 1.0f}},
+	{{0.0f, 10.0f, 0.0f, 1.0f}},
+	{{0.0f, 0.0f, 0.0f, 1.0f}},
+	{{0.0f, 0.0f, 10.0f, 1.0f}},
 	};
 	glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
 	glBufferSubData (GL_ARRAY_BUFFER, 0, sizeof(p), p);
@@ -207,6 +209,8 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, component_uv);
 	ECS_COMPONENT_DEFINE (world, component_rectangle);
 	ECS_COMPONENT_DEFINE (world, component_controller);
+	ECS_COMPONENT_DEFINE (world, component_capacity);
+	ECS_COMPONENT_DEFINE (world, component_offset);
 	ECS_COMPONENT_DEFINE (world, component_count);
 	ECS_COMPONENT_DEFINE (world, component_stride);
 	ECS_COMPONENT_DEFINE (world, component_transform);

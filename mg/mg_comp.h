@@ -37,7 +37,9 @@ typedef struct component_lines
 	uint32_t vboc;
 } component_lines;
 typedef uint32_t component_stride;
+typedef uint32_t component_capacity;
 typedef uint32_t component_count;
+typedef uint32_t component_offset;
 typedef char component_filename[256];
 
 
