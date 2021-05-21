@@ -26,6 +26,7 @@ static void system_pointcloud_set (ecs_iter_t *it)
 	ECS_COLUMN (it, component_capacity, c, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
+		printf ("system_pointcloud_set component_capacity %i\n", c[i]);
 		void * data;
 		glGenVertexArrays (1, &pc[i].vao);
 		glGenBuffers (1, &pc[i].vbop);
@@ -60,9 +61,12 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 	glUseProgram (global_glprogram[GLPROGRAM_POINT]);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
+		GLint first = o[i];
+		GLsizei count = c[i];
 		glBindVertexArray (pc[i].vao);
 		glUniformMatrix4fv (global_gluniform[GLUNIFORM_POINT_MVP], 1, GL_FALSE, (const GLfloat *) &global_gcam.mvp);
-		glDrawArrays (GL_POINTS, o[i], c[i]);
+		count = 5914;
+		glDrawArrays (GL_POINTS, first, count);
 	}
 }
 

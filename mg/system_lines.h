@@ -16,23 +16,6 @@
 
 
 
-
-
-static void system_lines_draw (ecs_iter_t *it)
-{
-	ECS_COLUMN (it, component_lines, lines, 1);
-	ECS_COLUMN (it, component_offset, o, 2);
-	ECS_COLUMN (it, component_count, c, 3);
-	glUseProgram (global_glprogram[GLPROGRAM_LINE]);
-	for (int32_t i = 0; i < it->count; ++i)
-	{
-		glBindVertexArray (lines[i].vao);
-		glUniformMatrix4fv (global_gluniform[GLUNIFORM_LINE_MVP], 1, GL_FALSE, (const GLfloat *) &global_gcam.mvp);
-		glDrawArrays (GL_LINES, o[i], c[i]);
-	}
-}
-
-
 static void system_lines_onset (ecs_iter_t *it)
 {
 	printf ("[ECS_SYSTEM] system_lines_onset\n");
@@ -40,6 +23,7 @@ static void system_lines_onset (ecs_iter_t *it)
 	ECS_COLUMN (it, component_capacity, count, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
+		printf ("system_lines_onset component_capacity %i\n", count[i]);
 		void * data;
 		glGenVertexArrays (1, &lines[i].vao);
 		glGenBuffers (1, &lines[i].vbop);
@@ -67,6 +51,22 @@ static void system_lines_onset (ecs_iter_t *it)
 
 		ASSERT (glIsBuffer(lines[i].vbop) == GL_TRUE);
 		ASSERT (glIsBuffer(lines[i].vboc) == GL_TRUE);
+	}
+}
+
+
+
+static void system_lines_draw (ecs_iter_t *it)
+{
+	ECS_COLUMN (it, component_lines, lines, 1);
+	ECS_COLUMN (it, component_offset, o, 2);
+	ECS_COLUMN (it, component_count, c, 3);
+	glUseProgram (global_glprogram[GLPROGRAM_LINE]);
+	for (int32_t i = 0; i < it->count; ++i)
+	{
+		glBindVertexArray (lines[i].vao);
+		glUniformMatrix4fv (global_gluniform[GLUNIFORM_LINE_MVP], 1, GL_FALSE, (const GLfloat *) &global_gcam.mvp);
+		glDrawArrays (GL_LINES, o[i], c[i]);
 	}
 }
 

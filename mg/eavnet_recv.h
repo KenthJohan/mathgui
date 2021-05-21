@@ -61,8 +61,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;
 
 	case MG_CAPACITY:{
-		uint32_t * a = ptr;
-		ecs_set (world, e, component_capacity, {*a});
+		component_capacity c = *(uint32_t*)ptr;
+		ecs_set (world, e, component_capacity, {c});
 		break;}
 
 	case MG_POINTCLOUD_POS:{
@@ -77,7 +77,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vbop);
 		component_position * p = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
-		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
+		component_count point_count = value_size / sizeof(component_position);
+		ecs_set (world, e, component_count, {point_count});
 		ecs_set (world, e, component_offset, {0});
 		break;}
 
@@ -93,8 +94,6 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vboc);
 		component_color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
-		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
-		ecs_set (world, e, component_offset, {0});
 		break;}
 
 	case MG_LINES_POS:{
@@ -125,8 +124,6 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		glBindBuffer (GL_ARRAY_BUFFER, lines->vboc);
 		component_color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
-		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
-		ecs_set (world, e, component_offset, {0});
 		break;}
 
 	case MG_TEXTURE:{

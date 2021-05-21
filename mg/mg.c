@@ -96,7 +96,7 @@ static void test_eavnet (struct eavnet_context * ctx)
 	{
 		uint32_t count = 1000;
 		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_POINTCLOUD, NULL, 0);
-		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_COUNT, &(component_capacity){count}, 0);
+		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_CAPACITY, &(component_capacity){count}, 0);
 		uint32_t size = count * sizeof (component_position);
 		component_position * p = malloc (size);
 		for (uint32_t i = 0; i < count; ++i)
@@ -113,7 +113,7 @@ static void test_eavnet (struct eavnet_context * ctx)
 	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(component_texture){0, 100, 100, 1}, 0);
 	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(component_texture){0, 300, 300, 1}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_MESH, NULL, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_COUNT, &(component_capacity){6}, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_CAPACITY, &(component_capacity){6}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(component_rectangle){{1.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION,&(component_position){{3.0f, 1.0f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE, &(component_position){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
