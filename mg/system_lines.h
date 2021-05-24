@@ -18,12 +18,12 @@
 
 static void system_lines_onset (ecs_iter_t *it)
 {
-	printf ("[ECS_SYSTEM] system_lines_onset\n");
+	XLOG (XLOG_INF, "EcsOnSet %i\n", it->count);
 	ECS_COLUMN (it, component_lines, lines, 1);
 	ECS_COLUMN (it, component_capacity, count, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		printf ("system_lines_onset component_capacity %i\n", count[i]);
+		XLOG (XLOG_INF, "capacity %i\n", count[i]);
 		void * data;
 		glGenVertexArrays (1, &lines[i].vao);
 		glGenBuffers (1, &lines[i].vbop);

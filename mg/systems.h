@@ -7,6 +7,7 @@
 #include "csc/csc_gl.h"
 #include "csc/csc_gcam.h"
 #include "csc/csc_qf32.h"
+#include "csc/csc_xlog.h"
 
 
 #include "mg_comp.h"
@@ -43,7 +44,7 @@ static struct csc_gcam global_gcam;
 
 static void trigger_transform (ecs_iter_t *it)
 {
-	printf ("[ECS_TRIGGER] trigger_transform_onadd: ");
+	XLOG (XLOG_INF, " EcsOnAdd: %i\n", it->count);
 	ECS_COLUMN (it, component_transform, t, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -66,7 +67,7 @@ static void system_apply_rotation (ecs_iter_t *it)
 
 static void system_transform_onset (ecs_iter_t *it)
 {
-	printf ("system_transform_onset\n");
+	XLOG (XLOG_INF, " EcsOnSet: %i\n", it->count);
 	ECS_COLUMN (it, component_position, p, 1);
 	ECS_COLUMN (it, component_scale, s, 2);
 	ECS_COLUMN (it, component_quaternion, q, 3);

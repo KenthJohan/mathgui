@@ -7,6 +7,7 @@
 #include "csc/csc_gl.h"
 #include "csc/csc_math.h"
 #include "csc/csc_sdlglew.h"
+#include "csc/csc_xlog.h"
 
 //#include "api.h"
 
@@ -144,7 +145,7 @@ static void test_ecs_onset (ecs_world_t * world)
 
 static void test_ecs_addlines (ecs_world_t * world)
 {
-	printf ("[INFO] Adding origin. (x,y,z) = (red, green, blue)\n");
+	XLOG (XLOG_INF, "Adding origin. (x,y,z) = (red, green, blue)\n");
 
 	ecs_entity_t e = ecs_new (world, 0);
 	ecs_add (world, e, component_lines);

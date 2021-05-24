@@ -8,6 +8,7 @@
 #include "csc/csc_gcam.h"
 #include "csc/csc_qf32.h"
 #include "csc/csc_vu32.h"
+#include "csc/csc_xlog.h"
 
 
 #include "mg_comp.h"
@@ -21,12 +22,12 @@
 
 static void system_pointcloud_set (ecs_iter_t *it)
 {
-	printf ("[ECS_SYSTEM] system_pointcloud_set\n");
+	XLOG (XLOG_INF, "EcsOnSet %i\n", it->count);
 	ECS_COLUMN (it, component_pointcloud, pc, 1);
 	ECS_COLUMN (it, component_capacity, c, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		printf ("system_pointcloud_set component_capacity %i\n", c[i]);
+		XLOG (XLOG_INF, "capacity = %i\n", c[i]);
 		void * data;
 		glGenVertexArrays (1, &pc[i].vao);
 		glGenBuffers (1, &pc[i].vbop);

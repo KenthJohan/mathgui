@@ -7,6 +7,7 @@
 #include "csc/csc_gcam.h"
 #include "csc/csc_qf32.h"
 #include "csc/csc_debug_nng.h"
+#include "csc/csc_xlog.h"
 
 #include <nng/nng.h>
 #include <nng/protocol/pair0/pair.h>
