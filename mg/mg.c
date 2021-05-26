@@ -199,6 +199,7 @@ int main (int argc, char * argv[])
 	glEnable (GL_DEPTH_TEST);
 	glLineWidth (4.0f);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc (GL_ALWAYS);
 
 
 	ecs_world_t * world = ecs_init();
@@ -240,9 +241,9 @@ int main (int argc, char * argv[])
 	systems_init (world);
 	system_opengl_init (world);
 	system_texture_init (world);
-	system_pointcloud_init (world);
-	system_mesh_init (world);
 	system_lines_init (world);
+	system_mesh_init (world);
+	system_pointcloud_init (world);
 	system_camera_init (world);
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
@@ -263,6 +264,8 @@ int main (int argc, char * argv[])
 	//SDL_Thread * t = SDL_CreateThread (eavnet_thread_recv, "mythread", &eavcontext);
 	//ASSERT (t);
 
+	int mouse_x;
+	int mouse_y;
 
 	while (main_flags & CSC_SDLGLEW_RUNNING)
 	{
@@ -270,12 +273,68 @@ int main (int argc, char * argv[])
 		while (SDL_PollEvent (&event))
 		{
 			csc_sdlglew_event_loop (window, &event, &main_flags, &global_gcam);
+
+			switch (event.type)
+			{
+			case SDL_MOUSEWHEEL:{
+				global_gcam.fov += event.wheel.y * f32_deg_to_rad (10.0f);
+				global_gcam.fov = CLAMP(global_gcam.fov, f32_deg_to_rad (1.0f), f32_deg_to_rad (90.0f));
+				XLOG(XLOG_INF, "fov %f\n", f32_rad_to_deg (global_gcam.fov));
+			}break;
+
+			case SDL_MOUSEBUTTONDOWN:
+				if (event.button.state == SDL_PRESSED)
+				{
+					//event.motion.x
+					XLOG(XLOG_INF, "SDL_ShowCursor SDL_DISABLE\n");
+					SDL_SetRelativeMouseMode(SDL_TRUE);
+					//SDL_ShowCursor(SDL_DISABLE);
+					SDL_SetWindowGrab(window, SDL_TRUE);
+					SDL_GetMouseState(&mouse_x, &mouse_y);
+				}
+				break;
+
+			case SDL_MOUSEBUTTONUP:
+				if (event.button.state == SDL_RELEASED)
+				{
+					XLOG(XLOG_INF, "SDL_ShowCursor SDL_ENABLE\n");
+					SDL_SetRelativeMouseMode(SDL_FALSE);
+					SDL_SetWindowGrab(window, SDL_FALSE);
+					//SDL_ShowCursor(SDL_ENABLE);
+					int w;
+					int h;
+					SDL_GetWindowSize (window, &w, &h);
+					//SDL_WarpMouseInWindow (window, w / 2, h / 2);
+					SDL_WarpMouseInWindow (window, mouse_x, mouse_y);
+				}
+				break;
+			}
+
 		}
 
 		{
 			//Control graphics camera
 			csc_sdl_motion_wasd (keyboard, &global_gcam.d);
 			csc_sdl_motion_pyr (keyboard, &global_gcam.pyr_delta);
+
+			int mdltx = 0, mdlty = 0;
+			SDL_GetRelativeMouseState(&mdltx, &mdlty);
+
+			if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
+			{
+				global_gcam.pyr_delta.x = (float)mdlty * 0.1f;
+				global_gcam.pyr_delta.y = (float)mdltx * 0.1f;
+				//global_gcam.
+				//XLOG(XLOG_INF, "SDL_GetRelativeMouseState %i %i\n", mdltx, mdlty);
+				//SDL_ShowCursor(SDL_DISABLE);
+				/*
+				int w;
+				int h;
+				SDL_GetWindowSize (window, &w, &h);
+				SDL_WarpMouseInWindow (window, w / 2, h / 2);
+				*/
+			}
+
 			if (SDL_GetModState() & KMOD_CAPS)
 			{
 				v3f32_mul (&global_gcam.d, &global_gcam.d, 0.001f);
@@ -289,11 +348,15 @@ int main (int argc, char * argv[])
 			csc_gcam_update (&global_gcam);
 		}
 
-		glClearColor (0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor (0.3f, 0.3f, 0.3f, 1.0f);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		eavnet_receiver1 (&eavcontext);
+
+
+
+
 
 		if (keyboard[SDL_SCANCODE_1])
 		{
