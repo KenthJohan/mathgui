@@ -19,8 +19,8 @@
 static void system_lines_onset (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, "EcsOnSet %i\n", it->count);
-	ECS_COLUMN (it, component_lines, lines, 1);
-	ECS_COLUMN (it, component_capacity, count, 2);
+	ECS_COLUMN (it, Lines_OpenGL, lines, 1);
+	ECS_COLUMN (it, Capacity, count, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		XLOG (XLOG_INF, "capacity %i\n", count[i]);
@@ -33,18 +33,18 @@ static void system_lines_onset (ecs_iter_t *it)
 		glEnableVertexAttribArray (0);
 		glEnableVertexAttribArray (1);
 
-		data = malloc(count[i] * sizeof (component_position));
+		data = malloc(count[i] * sizeof (Position4));
 		v4f32_repeat_random (count[i], data);
 		v4f32_set_w_repeat (count[i], data, 10.0f);
 		glBindBuffer (GL_ARRAY_BUFFER, lines[i].vbop);
-		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_position), data, GL_DYNAMIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (Position4), data, GL_DYNAMIC_DRAW);
 		glVertexAttribPointer (0, 4, GL_FLOAT, GL_FALSE, 0, (void*)(intptr_t)0);
 		free (data);
 
-		data = malloc(count[i] * sizeof (component_color));
+		data = malloc(count[i] * sizeof (Color));
 		vu32_repeat_random_mask (count[i], data, 0xFFFFFFFF);
 		glBindBuffer (GL_ARRAY_BUFFER, lines[i].vboc);
-		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (component_color), data, GL_DYNAMIC_DRAW);
+		glBufferData (GL_ARRAY_BUFFER, count[i] * sizeof (Color), data, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray (1);
 		glVertexAttribPointer (1, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)(intptr_t)0);
 		free (data);
@@ -58,9 +58,9 @@ static void system_lines_onset (ecs_iter_t *it)
 
 static void system_lines_draw (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, component_lines, lines, 1);
-	ECS_COLUMN (it, component_offset, o, 2);
-	ECS_COLUMN (it, component_count, c, 3);
+	ECS_COLUMN (it, Lines_OpenGL, lines, 1);
+	ECS_COLUMN (it, Offset, o, 2);
+	ECS_COLUMN (it, Count, c, 3);
 	glUseProgram (global_glprogram[GLPROGRAM_LINE]);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -73,8 +73,8 @@ static void system_lines_draw (ecs_iter_t *it)
 
 static void system_lines_init (ecs_world_t * world)
 {
-	ECS_SYSTEM (world, system_lines_draw, EcsOnUpdate, component_lines, component_offset, component_count);
-	ECS_SYSTEM (world, system_lines_onset, EcsOnSet, component_lines, component_capacity);
+	ECS_SYSTEM (world, system_lines_draw, EcsOnUpdate, Lines_OpenGL, Offset, Count);
+	ECS_SYSTEM (world, system_lines_onset, EcsOnSet, Lines_OpenGL, Capacity);
 }
 
 

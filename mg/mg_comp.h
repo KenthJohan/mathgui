@@ -3,60 +3,72 @@
 #include "csc/csc_math.h"
 #include "csc/csc_qf32.h"
 
+//Spatial
+typedef uint32_t Color;
+typedef v4f32 Position4;
+typedef v4f32 Scale4;
+typedef qf32 Quaternion;
+typedef qf32 QuaternionDelta;
+typedef m4f32 Transform;
 
-typedef uint32_t component_color;
-typedef v4f32 component_position;
-typedef v4f32 component_scale;
-typedef qf32 component_quaternion;
-typedef v4f32 component_applyrotation;
-typedef v2f32 component_uv;
-typedef v2f32 component_rectangle;
-typedef m4f32 component_transform;
-typedef struct component_texture
+//Geometry
+typedef v2f32 TextureUV;
+typedef v2f32 Rectangle2f;
+
+
+//OpenGL
+typedef struct Texture_OpenGL
 {
 	uint32_t unit;
 	uint32_t width;
 	uint32_t height;
 	uint32_t depth;
-} component_texture;
-typedef struct component_pointcloud
+} Texture_OpenGL;
+
+typedef struct Pointcloud_OpenGL
 {
 	uint32_t vao;
 	uint32_t vboc;
 	uint32_t vbop;
-} component_pointcloud;
-typedef struct component_mesh
+} Pointcloud_OpenGL;
+
+typedef struct Mesh_OpenGL
 {
 	uint32_t vbop;
 	uint32_t vbot;
-} component_mesh;
-typedef struct component_lines
+} Mesh_OpenGL;
+
+typedef struct Lines_OpenGL
 {
 	uint32_t vao;
 	uint32_t vbop;
 	uint32_t vboc;
-} component_lines;
-typedef uint32_t component_stride;
-typedef uint32_t component_capacity;
-typedef uint32_t component_count;
-typedef uint32_t component_offset;
-typedef char component_filename[256];
+} Lines_OpenGL;
+
+typedef uint32_t VBO_OpenGL;
+typedef uint32_t VA_OpenGL;
+typedef uint32_t VAO_OpenGL;
+typedef uint32_t Tex2DArray_OpenGL;
+typedef int32_t Program_OpenGL;
+typedef int32_t Shader_OpenGL;
+
+
+//Array
+typedef uint32_t Stride;
+typedef uint32_t Capacity;
+typedef uint32_t Count;
+typedef uint32_t Offset;
+typedef char Filename[256];
 
 
 
 //SDL:
-typedef struct component_controller
+typedef struct Keyboard_SDL
 {
 	const uint8_t * keyboard; //SDL Keyboard
-} component_controller;
+} Keyboard_SDL;
 
-//OpenGL:
-typedef uint32_t component_vbo;
-typedef uint32_t component_va;
-typedef uint32_t component_vao;
-typedef uint32_t component_gl_tex2darray;
-typedef int32_t component_gl_program;
-typedef int32_t component_gl_shader;
+
 
 
 

@@ -62,8 +62,8 @@ static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
 
 static void system_texture_onset (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, component_texture, texure, 1);
-	ECS_COLUMN (it, component_gl_tex2darray, tex, 2);
+	ECS_COLUMN (it, Texture_OpenGL, texure, 1);
+	ECS_COLUMN (it, Tex2DArray_OpenGL, tex, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		if (glIsTexture (tex[i]))
@@ -102,7 +102,7 @@ static void system_texture_onset (ecs_iter_t *it)
 
 static void system_texture_init (ecs_world_t * world)
 {
-	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, component_texture, component_gl_tex2darray);
+	ECS_SYSTEM (world, system_texture_onset, EcsOnSet, Texture_OpenGL, Tex2DArray_OpenGL);
 }
 
 

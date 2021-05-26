@@ -45,7 +45,7 @@ static struct csc_gcam global_gcam;
 static void trigger_transform (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, " EcsOnAdd: %i\n", it->count);
-	ECS_COLUMN (it, component_transform, t, 1);
+	ECS_COLUMN (it, Transform, t, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		m4f32_identity (t + i);
@@ -56,8 +56,8 @@ static void trigger_transform (ecs_iter_t *it)
 
 static void system_apply_rotation (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, component_quaternion, q, 1);
-	ECS_COLUMN (it, component_controller, c, 2);//Singleton
+	ECS_COLUMN (it, Quaternion, q, 1);
+	ECS_COLUMN (it, Keyboard_SDL, c, 2);//Singleton
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		qf32_rotate2_xyza (q + i, c->keyboard[SDL_SCANCODE_1], c->keyboard[SDL_SCANCODE_2], c->keyboard[SDL_SCANCODE_3], 0.01f);
@@ -68,10 +68,10 @@ static void system_apply_rotation (ecs_iter_t *it)
 static void system_transform_onset (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, " EcsOnSet: %i\n", it->count);
-	ECS_COLUMN (it, component_position, p, 1);
-	ECS_COLUMN (it, component_scale, s, 2);
-	ECS_COLUMN (it, component_quaternion, q, 3);
-	ECS_COLUMN (it, component_transform, t, 4);
+	ECS_COLUMN (it, Position4, p, 1);
+	ECS_COLUMN (it, Scale4, s, 2);
+	ECS_COLUMN (it, Quaternion, q, 3);
+	ECS_COLUMN (it, Transform, t, 4);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		m4f32 * m = t + i;
@@ -94,9 +94,9 @@ static void system_transform_onset (ecs_iter_t *it)
 
 static void systems_init (ecs_world_t * world)
 {
-	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, component_transform);
-	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, component_position, component_scale, component_quaternion, component_transform);
-	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, component_quaternion, $component_controller);
+	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);
+	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, Position4, Scale4, Quaternion, Transform);
+	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, Quaternion, $Keyboard_SDL);
 	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);
 
 	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_pointcloud.glvs;"CSC_SRCDIR"shader_pointcloud.glfs");

@@ -49,99 +49,99 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	switch (attribute)
 	{
 	case MG_MESH:
-		ecs_add (world, e, component_mesh);
-		ecs_add (world, e, component_vao);
+		ecs_add (world, e, Mesh_OpenGL);
+		ecs_add (world, e, VAO_OpenGL);
 		break;
 
 	case MG_POINTCLOUD:
-		ecs_add (world, e, component_pointcloud);
+		ecs_add (world, e, Pointcloud_OpenGL);
 		break;
 
 	case MG_LINES:
-		ecs_add (world, e, component_lines);
+		ecs_add (world, e, Lines_OpenGL);
 		break;
 
 	case MG_CAPACITY:{
-		component_capacity c = *(uint32_t*)ptr;
-		ecs_set (world, e, component_capacity, {c});
+		Capacity c = *(uint32_t*)ptr;
+		ecs_set (world, e, Capacity, {c});
 		break;}
 
 	case MG_POINTCLOUD_POS:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		component_pointcloud const * cloud = ecs_get (world, e, component_pointcloud);
-		component_capacity const * count = ecs_get (world, e, component_capacity);
+		Pointcloud_OpenGL const * cloud = ecs_get (world, e, Pointcloud_OpenGL);
+		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (cloud);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (cloud->vbop));
-		uint32_t size = (*count) * sizeof (component_position);
+		uint32_t size = (*count) * sizeof (Position4);
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vbop);
-		component_position * p = ptr;
+		Position4 * p = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
-		component_count point_count = value_size / sizeof(component_position);
-		ecs_set (world, e, component_count, {point_count});
-		ecs_set (world, e, component_offset, {0});
+		Count point_count = value_size / sizeof(Position4);
+		ecs_set (world, e, Count, {point_count});
+		ecs_set (world, e, Offset, {0});
 		break;}
 
 	case MG_POINTCLOUD_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		component_pointcloud const * cloud = ecs_get (world, e, component_pointcloud);
-		component_capacity const * count = ecs_get (world, e, component_capacity);
+		Pointcloud_OpenGL const * cloud = ecs_get (world, e, Pointcloud_OpenGL);
+		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (cloud);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (cloud->vboc));
-		uint32_t size = (*count) * sizeof (component_color);
+		uint32_t size = (*count) * sizeof (Color);
 		glBindBuffer (GL_ARRAY_BUFFER, cloud->vboc);
-		component_color * c = ptr;
+		Color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
 		break;}
 
 	case MG_LINES_POS:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		component_lines const * lines = ecs_get (world, e, component_lines);
-		component_capacity const * count = ecs_get (world, e, component_capacity);
+		Lines_OpenGL const * lines = ecs_get (world, e, Lines_OpenGL);
+		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (lines);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (lines->vbop));
-		uint32_t size = (*count) * sizeof (component_position);
+		uint32_t size = (*count) * sizeof (Position4);
 		glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
-		component_position * p = ptr;
+		Position4 * p = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), p);
-		ecs_set (world, e, component_count, {value_size / sizeof(component_position)});
-		ecs_set (world, e, component_offset, {0});
+		ecs_set (world, e, Count, {value_size / sizeof(Position4)});
+		ecs_set (world, e, Offset, {0});
 		break;}
 
 	case MG_LINES_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		component_lines const * lines = ecs_get (world, e, component_lines);
-		component_capacity const * count = ecs_get (world, e, component_capacity);
+		Lines_OpenGL const * lines = ecs_get (world, e, Lines_OpenGL);
+		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (lines);
 		ASSERT_NOTNULL (count);
 		ASSERT (glIsBuffer (lines->vboc));
-		uint32_t size = (*count) * sizeof (component_color);
+		uint32_t size = (*count) * sizeof (Color);
 		glBindBuffer (GL_ARRAY_BUFFER, lines->vboc);
-		component_color * c = ptr;
+		Color * c = ptr;
 		glBufferSubData (GL_ARRAY_BUFFER, 0, MIN(value_size, size), c);
 		break;}
 
 	case MG_TEXTURE:{
-		ecs_add (world, e, component_gl_tex2darray);
-		ecs_set_ptr (world, e, component_texture, ptr);
+		ecs_add (world, e, Tex2DArray_OpenGL);
+		ecs_set_ptr (world, e, Texture_OpenGL, ptr);
 		break;}
 
 	case MG_POSITION:{
-		ecs_set_ptr (world, e, component_position, ptr);
+		ecs_set_ptr (world, e, Position4, ptr);
 		break;}
 
 	case MG_SCALE:{
-		ecs_set_ptr (world, e, component_scale, ptr);
+		ecs_set_ptr (world, e, Scale4, ptr);
 		break;}
 
 	case MG_QUATERNION:{
-		ecs_set_ptr (world, e, component_quaternion, ptr);
+		ecs_set_ptr (world, e, Quaternion, ptr);
 		break;}
 
 	case MG_ADD_INSTANCEOF:{
@@ -150,16 +150,16 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;}
 
 	case MG_RECTANGLE:{
-		ecs_set_ptr (world, e, component_rectangle, ptr);
+		ecs_set_ptr (world, e, Rectangle2f, ptr);
 		break;}
 
 	case MG_TRANSFORM:{
-		ecs_set_ptr (world, e, component_transform, ptr);
+		ecs_set_ptr (world, e, Transform, ptr);
 		break;}
 
 	case MG_TEXTURE_CONTENT:{
-		component_texture const * texture = ecs_get (world, e, component_texture);
-		component_gl_tex2darray const * tex = ecs_get (world, e, component_gl_tex2darray);
+		Texture_OpenGL const * texture = ecs_get (world, e, Texture_OpenGL);
+		Tex2DArray_OpenGL const * tex = ecs_get (world, e, Tex2DArray_OpenGL);
 		glActiveTexture (GL_TEXTURE0 + texture->unit);
 		glBindTexture (GL_TEXTURE_2D_ARRAY, *tex);//Depends on glActiveTexture()
 		ASSERT (value_size <= (texture->width * texture->height * sizeof (uint32_t)));

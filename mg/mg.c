@@ -50,18 +50,18 @@
 static void test_ecs_addents (ecs_world_t * world)
 {
 
-	ECS_ENTITY (world, mytexture1, component_gl_tex2darray);
-	ECS_ENTITY (world, mytexture2, component_gl_tex2darray);
-	ECS_ENTITY (world, mytexture3, component_gl_tex2darray);
-	ecs_set (world, mytexture1, component_texture, {.unit = 0, .width = 100, .height = 100, .depth = 4});
-	ecs_set (world, mytexture2, component_texture, {.unit = 0, .width = 50, .height = 50, .depth = 4});
-	ecs_set (world, mytexture3, component_texture, {.unit = 0, .width = 200, .height = 200, .depth = 4});
+	ECS_ENTITY (world, mytexture1, Tex2DArray_OpenGL);
+	ECS_ENTITY (world, mytexture2, Tex2DArray_OpenGL);
+	ECS_ENTITY (world, mytexture3, Tex2DArray_OpenGL);
+	ecs_set (world, mytexture1, Texture_OpenGL, {.unit = 0, .width = 100, .height = 100, .depth = 4});
+	ecs_set (world, mytexture2, Texture_OpenGL, {.unit = 0, .width = 50, .height = 50, .depth = 4});
+	ecs_set (world, mytexture3, Texture_OpenGL, {.unit = 0, .width = 200, .height = 200, .depth = 4});
 
-	ECS_ENTITY (world, img, component_mesh, component_vao);
-	ecs_set (world, img, component_capacity, {6});
-	ecs_set (world, img, component_rectangle, {1.0f, 1.0f});
+	ECS_ENTITY (world, img, Mesh_OpenGL, VAO_OpenGL);
+	ecs_set (world, img, Capacity, {6});
+	ecs_set (world, img, Rectangle2f, {{1.0f, 1.0f}});
 
-	ecs_entity_t const * e2 = ecs_bulk_new (world, component_transform, 4);
+	ecs_entity_t const * e2 = ecs_bulk_new (world, Transform, 4);
 	ecs_add_entity (world, e2[0], ECS_INSTANCEOF | mytexture1);
 	ecs_add_entity (world, e2[1], ECS_INSTANCEOF | mytexture1);
 	ecs_add_entity (world, e2[2], ECS_INSTANCEOF | mytexture2);
@@ -73,9 +73,9 @@ static void test_ecs_addents (ecs_world_t * world)
 	ecs_add_entity (world, e2[3], ECS_INSTANCEOF | img);
 	for (int i = 0; i < 4; ++i)
 	{
-		ecs_set (world, e2[i], component_scale, {(float)(i+1)/10.0f, (float)(i+1)/10.0f, 1.0f, 1.0f});
-		ecs_set (world, e2[i], component_quaternion, {1.0f, 0.0f, 0.0f, 0.0f});
-		ecs_set (world, e2[i], component_position, {0.0f, 0.0f, (float)i/2.0f, 0.0f});
+		ecs_set (world, e2[i], Scale4, {{(float)(i+1)/10.0f, (float)(i+1)/10.0f, 1.0f, 1.0f}});
+		ecs_set (world, e2[i], Quaternion, {{1.0f, 0.0f, 0.0f, 0.0f}});
+		ecs_set (world, e2[i], Position4, {{0.0f, 0.0f, (float)i/2.0f, 0.0f}});
 	}
 }
 
@@ -97,9 +97,9 @@ static void test_eavnet (struct eavnet_context * ctx)
 	{
 		uint32_t count = 1000;
 		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_POINTCLOUD, NULL, 0);
-		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_CAPACITY, &(component_capacity){count}, 0);
-		uint32_t size = count * sizeof (component_position);
-		component_position * p = malloc (size);
+		eavnet_receiver (ctx, MYENT_DRAW_CLOUD, MG_CAPACITY, &(Capacity){count}, 0);
+		uint32_t size = count * sizeof (Position4);
+		Position4 * p = malloc (size);
 		for (uint32_t i = 0; i < count; ++i)
 		{
 			p[i].x = 10.0f * (float)i / rand();
@@ -111,19 +111,19 @@ static void test_eavnet (struct eavnet_context * ctx)
 		free (p);
 	}
 
-	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(component_texture){0, 100, 100, 1}, 0);
-	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(component_texture){0, 300, 300, 1}, 0);
+	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(Texture_OpenGL){0, 100, 100, 1}, 0);
+	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(Texture_OpenGL){0, 300, 300, 1}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_MESH, NULL, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_CAPACITY, &(component_capacity){6}, 0);
-	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(component_rectangle){{1.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION,&(component_position){{3.0f, 1.0f, 0.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE, &(component_position){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_QUATERNION, &(component_position){{0.0f, 0.0f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_CAPACITY, &(Capacity){6}, 0);
+	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(Rectangle2f){{1.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION,&(Position4){{3.0f, 1.0f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE, &(Position4){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_QUATERNION, &(Position4){{0.0f, 0.0f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE1}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_POSITION, &(component_position){{4.0f, 1.0f, 0.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_SCALE, &(component_position){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_QUATERNION, &(component_position){{0.0f, 0.0f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_POSITION, &(Position4){{4.0f, 1.0f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_SCALE, &(Position4){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_QUATERNION, &(Position4){{0.0f, 0.0f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE2}, 0);
 	//mynet_send_ptr(NULL, 0, 0, &(component_position){1.0f, 2.0f, 3.0f, 1.0f}, sizeof (component_position));
@@ -133,13 +133,13 @@ static void test_eavnet (struct eavnet_context * ctx)
 static void test_ecs_onset (ecs_world_t * world)
 {
 	ecs_entity_t e =  ecs_new (world, 0);
-	ecs_add (world, e, component_transform);
-	ecs_add (world, e, component_quaternion);
-	ecs_add (world, e, component_position);
-	ecs_add (world, e, component_scale);
+	ecs_add (world, e, Transform);
+	ecs_add (world, e, Quaternion);
+	ecs_add (world, e, Position4);
+	ecs_add (world, e, Scale4);
 
 
-	ecs_set (world, e, component_scale, {{1.0f, 2.0f, 1.0f, 1.0f}});
+	ecs_set (world, e, Scale4, {{1.0f, 2.0f, 1.0f, 1.0f}});
 }
 
 
@@ -148,13 +148,13 @@ static void test_ecs_addlines (ecs_world_t * world)
 	XLOG (XLOG_INF, "Adding origin. (x,y,z) = (red, green, blue)\n");
 
 	ecs_entity_t e = ecs_new (world, 0);
-	ecs_add (world, e, component_lines);
-	ecs_set (world, e, component_capacity, {6});
-	ecs_set (world, e, component_offset, {0});
-	ecs_set (world, e, component_count, {6});
-	component_lines const * lines = ecs_get (world, e, component_lines);
+	ecs_add (world, e, Lines_OpenGL);
+	ecs_set (world, e, Capacity, {6});
+	ecs_set (world, e, Offset, {0});
+	ecs_set (world, e, Count, {6});
+	Lines_OpenGL const * lines = ecs_get (world, e, Lines_OpenGL);
 
-	component_position p[6] =
+	Position4 p[6] =
 	{
 	{{0.0f, 0.0f, 0.0f, 1.0f}},
 	{{10.0f, 0.0f, 0.0f, 1.0f}},
@@ -166,7 +166,7 @@ static void test_ecs_addlines (ecs_world_t * world)
 	glBindBuffer (GL_ARRAY_BUFFER, lines->vbop);
 	glBufferSubData (GL_ARRAY_BUFFER, 0, sizeof(p), p);
 
-	component_color c[6] =
+	Color c[6] =
 	{
 	0xFF0000FF,
 	0xFF0000FF,
@@ -202,31 +202,36 @@ int main (int argc, char * argv[])
 
 
 	ecs_world_t * world = ecs_init();
-	ECS_COMPONENT_DEFINE (world, component_color);
-	ECS_COMPONENT_DEFINE (world, component_position);
-	ECS_COMPONENT_DEFINE (world, component_scale);
-	ECS_COMPONENT_DEFINE (world, component_quaternion);
-	ECS_COMPONENT_DEFINE (world, component_applyrotation);
-	ECS_COMPONENT_DEFINE (world, component_uv);
-	ECS_COMPONENT_DEFINE (world, component_rectangle);
-	ECS_COMPONENT_DEFINE (world, component_controller);
-	ECS_COMPONENT_DEFINE (world, component_capacity);
-	ECS_COMPONENT_DEFINE (world, component_offset);
-	ECS_COMPONENT_DEFINE (world, component_count);
-	ECS_COMPONENT_DEFINE (world, component_stride);
-	ECS_COMPONENT_DEFINE (world, component_transform);
-	ECS_COMPONENT_DEFINE (world, component_filename);
-	ECS_COMPONENT_DEFINE (world, component_texture);
-	ECS_COMPONENT_DEFINE (world, component_pointcloud);
-	ECS_COMPONENT_DEFINE (world, component_va);
-	ECS_COMPONENT_DEFINE (world, component_vao);
-	ECS_COMPONENT_DEFINE (world, component_vbo);
-	ECS_COMPONENT_DEFINE (world, component_gl_tex2darray);
-	ECS_COMPONENT_DEFINE (world, component_gl_program);
-	ECS_COMPONENT_DEFINE (world, component_gl_shader);
-	ECS_COMPONENT_DEFINE (world, component_lines);
-	ECS_COMPONENT_DEFINE (world, component_mesh);
-	ECS_TAG_DEFINE (world, tag_gl_programlinked);
+	//Spatial
+	ECS_COMPONENT_DEFINE (world, Color);
+	ECS_COMPONENT_DEFINE (world, Position4);
+	ECS_COMPONENT_DEFINE (world, Scale4);
+	ECS_COMPONENT_DEFINE (world, Quaternion);
+	ECS_COMPONENT_DEFINE (world, QuaternionDelta);
+	ECS_COMPONENT_DEFINE (world, Transform);
+	//Geometry
+	ECS_COMPONENT_DEFINE (world, TextureUV);
+	ECS_COMPONENT_DEFINE (world, Rectangle2f);
+	//SDL
+	ECS_COMPONENT_DEFINE (world, Keyboard_SDL);
+	//Arrays
+	ECS_COMPONENT_DEFINE (world, Capacity);
+	ECS_COMPONENT_DEFINE (world, Offset);
+	ECS_COMPONENT_DEFINE (world, Count);
+	ECS_COMPONENT_DEFINE (world, Stride);
+	ECS_COMPONENT_DEFINE (world, Filename);
+	//OpenGL
+	ECS_COMPONENT_DEFINE (world, Texture_OpenGL);
+	ECS_COMPONENT_DEFINE (world, Pointcloud_OpenGL);
+	ECS_COMPONENT_DEFINE (world, VA_OpenGL);
+	ECS_COMPONENT_DEFINE (world, VAO_OpenGL);
+	ECS_COMPONENT_DEFINE (world, VBO_OpenGL);
+	ECS_COMPONENT_DEFINE (world, Tex2DArray_OpenGL);
+	ECS_COMPONENT_DEFINE (world, Program_OpenGL);
+	ECS_COMPONENT_DEFINE (world, Shader_OpenGL);
+	ECS_COMPONENT_DEFINE (world, Lines_OpenGL);
+	ECS_COMPONENT_DEFINE (world, Mesh_OpenGL);
+	ECS_TAG_DEFINE (world, ProgramLinked_OpenGL);
 
 
 	//system_opengl_init (world);
@@ -252,7 +257,7 @@ int main (int argc, char * argv[])
 
 	//ecs_entity_t e3 = e2[0];
 	const uint8_t * keyboard = SDL_GetKeyboardState (NULL);
-	ecs_singleton_set (world, component_controller, {keyboard});
+	ecs_singleton_set (world, Keyboard_SDL, {keyboard});
 
 
 	//SDL_Thread * t = SDL_CreateThread (eavnet_thread_recv, "mythread", &eavcontext);
