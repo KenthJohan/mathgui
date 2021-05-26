@@ -286,20 +286,20 @@ int main (int argc, char * argv[])
 				if (event.button.state == SDL_PRESSED)
 				{
 					//event.motion.x
-					XLOG(XLOG_INF, "SDL_ShowCursor SDL_DISABLE\n");
-					SDL_SetRelativeMouseMode(SDL_TRUE);
+					XLOG(XLOG_INF, "SDL_SetRelativeMouseMode SDL_TRUE\n");
+					SDL_SetRelativeMouseMode (SDL_TRUE);
 					//SDL_ShowCursor(SDL_DISABLE);
-					SDL_SetWindowGrab(window, SDL_TRUE);
-					SDL_GetMouseState(&mouse_x, &mouse_y);
+					SDL_SetWindowGrab (window, SDL_TRUE);
+					SDL_GetMouseState (&mouse_x, &mouse_y);
 				}
 				break;
 
 			case SDL_MOUSEBUTTONUP:
 				if (event.button.state == SDL_RELEASED)
 				{
-					XLOG(XLOG_INF, "SDL_ShowCursor SDL_ENABLE\n");
-					SDL_SetRelativeMouseMode(SDL_FALSE);
-					SDL_SetWindowGrab(window, SDL_FALSE);
+					XLOG(XLOG_INF, "SDL_SetRelativeMouseMode SDL_FALSE\n");
+					SDL_SetRelativeMouseMode (SDL_FALSE);
+					SDL_SetWindowGrab (window, SDL_FALSE);
 					//SDL_ShowCursor(SDL_ENABLE);
 					int w;
 					int h;
@@ -322,7 +322,7 @@ int main (int argc, char * argv[])
 
 			if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
 			{
-				global_gcam.pyr_delta.x = (float)mdlty * 0.1f;
+				global_gcam.pyr_delta.x = (float)mdlty * -0.1f;
 				global_gcam.pyr_delta.y = (float)mdltx * 0.1f;
 				//global_gcam.
 				//XLOG(XLOG_INF, "SDL_GetRelativeMouseState %i %i\n", mdltx, mdlty);
