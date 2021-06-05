@@ -44,34 +44,40 @@ static struct csc_gcam global_gcam;
 
 static void trigger_transform (ecs_iter_t *it)
 {
-	XLOG (XLOG_INF, " EcsOnAdd: %i\n", it->count);
-	ECS_COLUMN (it, Transform, t, 1);
+	XLOG (XLOG_INF, XLOG_ECS, " EcsOnAdd: %i", it->count);
+	Transform * t = ecs_term (it, Transform, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		m4f32_identity (t + i);
 	}
-	printf ("\n");
 }
+
 
 
 static void system_apply_rotation (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, Quaternion, q, 1);
-	ECS_COLUMN (it, Keyboard_SDL, c, 2);//Singleton
+	//XLOG (XLOG_INF, XLOG_ECS, " OnUpdate: %i\n", it->count);
+	Quaternion   * q = ecs_term (it, Quaternion  , 1);
+	Keyboard_SDL * c = ecs_term (it, Keyboard_SDL, 2);
+
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		qf32_rotate2_xyza (q + i, c->keyboard[SDL_SCANCODE_1], c->keyboard[SDL_SCANCODE_2], c->keyboard[SDL_SCANCODE_3], 0.01f);
+		float x = c->keyboard[SDL_SCANCODE_1];
+		float y = c->keyboard[SDL_SCANCODE_2];
+		float z = c->keyboard[SDL_SCANCODE_3];
+		qf32_rotate2_xyza (q + i, x, y, z, 0.01f);
 	}
 }
 
 
 static void system_transform_onset (ecs_iter_t *it)
 {
-	XLOG (XLOG_INF, " EcsOnSet: %i\n", it->count);
-	ECS_COLUMN (it, Position4, p, 1);
-	ECS_COLUMN (it, Scale4, s, 2);
-	ECS_COLUMN (it, Quaternion, q, 3);
-	ECS_COLUMN (it, Transform, t, 4);
+	XLOG (XLOG_INF, XLOG_ECS, " EcsOnSet: %i", it->count);
+	Position4  * p = ecs_term (it, Position4  , 1);
+	Scale4     * s = ecs_term (it, Scale4     , 2);
+	Quaternion * q = ecs_term (it, Quaternion , 3);
+	Transform  * t = ecs_term (it, Transform  , 4);
+
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		m4f32 * m = t + i;

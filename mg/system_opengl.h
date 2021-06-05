@@ -18,42 +18,42 @@
 
 static void trigger_vao_onadd (ecs_iter_t *it)
 {
-	printf ("[ECS_TRIGGER] trigger_vao_onadd: ");
+	XLOG(XLOG_INF, XLOG_ECS, "glGenVertexArrays n=%i", it->count);
 	ECS_COLUMN (it, VAO_OpenGL, vao, 1);
 	glGenVertexArrays (it->count, vao);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		printf ("%i, ", vao[i]);
+		//printf ("%i, ", vao[i]);
 	}
-	printf ("\n");
+	//printf ("\n");
 }
 
 
 static void trigger_gl_tex2darray_onadd (ecs_iter_t *it)
 {
-	printf ("[ECS_TRIGGER] trigger_tbo_onadd: ");
+	XLOG(XLOG_INF, XLOG_ECS, "glGenTextures n=%i", it->count);
 	ECS_COLUMN (it, Tex2DArray_OpenGL, t, 1);
 	glGenTextures (it->count, t);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		printf ("%i, ", t[i]);
+		//printf ("%i, ", t[i]);
 	}
-	printf ("\n");
+	//printf ("\n");
 }
 
 
 static void system_gl_shader_onset (ecs_iter_t *it)
 {
-	printf ("[ECS_SYSTEM] system_gl_shader_onset: ");
+	XLOG(XLOG_INF, XLOG_ECS, "csc_gl_shader_from_file n=%i", it->count);
 	ECS_COLUMN (it, Program_OpenGL, p, 1);
 	ECS_COLUMN (it, Filename, filename, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		ASSERT (filename[i]);
 		p[i] = csc_gl_shader_from_file (filename[i]);
-		printf ("%i, ", p[i]);
+		//printf ("%i, ", p[i]);
 	}
-	printf ("\n");
+	//printf ("\n");
 }
 
 

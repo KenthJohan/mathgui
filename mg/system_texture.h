@@ -11,6 +11,7 @@
 
 #include "mg_comp.h"
 #include "systems.h"
+#include "csc/csc_xlog.h"
 
 
 
@@ -62,19 +63,19 @@ static void fill_texture (uint8_t * data, int w, int h, uint32_t c, uint32_t n)
 
 static void system_texture_onset (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, Texture_OpenGL, texure, 1);
-	ECS_COLUMN (it, Tex2DArray_OpenGL, tex, 2);
+	Texture_OpenGL    * texure = ecs_term (it, Texture_OpenGL   , 1);
+	Tex2DArray_OpenGL * tex    = ecs_term (it, Tex2DArray_OpenGL, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		if (glIsTexture (tex[i]))
 		{
-			printf ("[ECS_SYSTEM] component_texture_onadd tex (%i) redefining\n", tex[i]);
+			XLOG(XLOG_INF, XLOG_ECS, "Reconfiguring texture. glDeleteTextures (%i)", tex[i]);
 			glDeleteTextures (1, tex + i);
 			//continue;
 		}
 		else
 		{
-			printf ("[ECS_SYSTEM] component_texture_onadd tex (%i)\n", tex[i]);
+			XLOG(XLOG_INF, XLOG_ECS, "Configuring texture (%i)", tex[i]);
 		}
 		uint32_t width = texure[i].width;
 		uint32_t height = texure[i].height;

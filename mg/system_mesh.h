@@ -19,7 +19,7 @@
 
 static void system_mesh_set_rectangle (ecs_iter_t *it)
 {
-	printf ("[ECS_SYSTEM] system_mesh_set_rectangle\n");
+	XLOG (XLOG_INF, XLOG_ECS_ONSET, "Set rectangles n=%i", it->count);
 	Mesh_OpenGL * img = ecs_term(it, Mesh_OpenGL, 1);
 	Capacity * count = ecs_term(it, Capacity, 2);
 	Rectangle2f * wh = ecs_term(it, Rectangle2f, 3);
@@ -44,7 +44,7 @@ static void system_mesh_set_rectangle (ecs_iter_t *it)
 
 static void system_mesh_set (ecs_iter_t *it)
 {
-	printf ("[ECS_SYSTEM] system_mesh_set\n");
+	XLOG (XLOG_INF, XLOG_ECS_ONSET, "Set meshes n=%i", it->count);
 	ECS_COLUMN (it, Mesh_OpenGL, mesh, 1);
 	ECS_COLUMN (it, Capacity, count, 2);
 	ECS_COLUMN (it, VAO_OpenGL, vao, 3);
@@ -134,7 +134,7 @@ static void system_mesh_draw1 (ecs_iter_t *it)
 
 static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 {
-	printf ("[ECS_TRIGGER] trigger_mesh_vbo_onadd: ");
+	XLOG (XLOG_INF, XLOG_ECS_ONADD, "glGenBuffers and glBindBuffer n=%i", it->count);
 	ECS_COLUMN (it, Mesh_OpenGL, mesh, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -143,7 +143,7 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 		glBindBuffer (GL_ARRAY_BUFFER, mesh[i].vbop);
 		glBindBuffer (GL_ARRAY_BUFFER, mesh[i].vbot);
 	}
-	printf ("\n");
+	//printf ("\n");
 }
 
 

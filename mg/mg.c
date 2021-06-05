@@ -145,8 +145,7 @@ static void test_ecs_onset (ecs_world_t * world)
 
 static void test_ecs_addlines (ecs_world_t * world)
 {
-	XLOG (XLOG_INF, "Adding origin. (x,y,z) = (red, green, blue)\n");
-
+	XLOG (XLOG_INF, XLOG_ECS, "Adding origin. (x,y,z) = (red, green, blue)");
 	ecs_entity_t e = ecs_new (world, 0);
 	ecs_add (world, e, Lines_OpenGL);
 	ecs_set (world, e, Capacity, {6});
@@ -246,7 +245,7 @@ int main (int argc, char * argv[])
 	system_pointcloud_init (world);
 	system_camera_init (world);
 	//test_ecs_onset (world);
-	//test_ecs_addents (world);//For testing
+	test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
 
 
@@ -279,14 +278,14 @@ int main (int argc, char * argv[])
 			case SDL_MOUSEWHEEL:{
 				global_gcam.fov += event.wheel.y * f32_deg_to_rad (10.0f);
 				global_gcam.fov = CLAMP(global_gcam.fov, f32_deg_to_rad (1.0f), f32_deg_to_rad (90.0f));
-				XLOG(XLOG_INF, "fov %f\n", f32_rad_to_deg (global_gcam.fov));
+				XLOG (XLOG_INF, XLOG_GENERAL, "fov %f", f32_rad_to_deg (global_gcam.fov));
 			}break;
 
 			case SDL_MOUSEBUTTONDOWN:
 				if (event.button.state == SDL_PRESSED)
 				{
 					//event.motion.x
-					XLOG(XLOG_INF, "SDL_SetRelativeMouseMode SDL_TRUE\n");
+					XLOG(XLOG_INF, XLOG_SDL, "SDL_SetRelativeMouseMode SDL_TRUE");
 					SDL_SetRelativeMouseMode (SDL_TRUE);
 					//SDL_ShowCursor(SDL_DISABLE);
 					SDL_SetWindowGrab (window, SDL_TRUE);
@@ -297,7 +296,7 @@ int main (int argc, char * argv[])
 			case SDL_MOUSEBUTTONUP:
 				if (event.button.state == SDL_RELEASED)
 				{
-					XLOG(XLOG_INF, "SDL_SetRelativeMouseMode SDL_FALSE\n");
+					XLOG(XLOG_INF, XLOG_SDL, "SDL_SetRelativeMouseMode SDL_FALSE");
 					SDL_SetRelativeMouseMode (SDL_FALSE);
 					SDL_SetWindowGrab (window, SDL_FALSE);
 					//SDL_ShowCursor(SDL_ENABLE);

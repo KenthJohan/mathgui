@@ -22,12 +22,12 @@
 
 static void system_pointcloud_set (ecs_iter_t *it)
 {
-	XLOG (XLOG_INF, "EcsOnSet %i\n", it->count);
+	XLOG (XLOG_INF, XLOG_ECS, "EcsOnSet n = %i", it->count);
 	ECS_COLUMN (it, Pointcloud_OpenGL, pc, 1);
 	ECS_COLUMN (it, Capacity, c, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		XLOG (XLOG_INF, "capacity = %i\n", c[i]);
+		XLOG (XLOG_INF, XLOG_ECS, "capacity = %i", c[i]);
 		void * data;
 		glGenVertexArrays (1, &pc[i].vao);
 		glGenBuffers (1, &pc[i].vbop);
