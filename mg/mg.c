@@ -194,11 +194,15 @@ int main (int argc, char * argv[])
 	csc_sdlglew_create_window (&window, &context, WIN_TITLE, WIN_X, WIN_Y, WIN_W, WIN_H, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
 	glEnable (GL_VERTEX_PROGRAM_POINT_SIZE);
-	glEnable (GL_BLEND);
-	glEnable (GL_DEPTH_TEST);
 	glLineWidth (4.0f);
+
+	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc (GL_ALWAYS);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(0.0f, 1.0f);
 
 
 	ecs_world_t * world = ecs_init();
@@ -245,7 +249,7 @@ int main (int argc, char * argv[])
 	system_pointcloud_init (world);
 	system_camera_init (world);
 	//test_ecs_onset (world);
-	test_ecs_addents (world);//For testing
+	//test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
 
 
