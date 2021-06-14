@@ -58,7 +58,7 @@ static void system_apply_rotation (ecs_iter_t *it)
 {
 	//XLOG (XLOG_INF, XLOG_ECS, " OnUpdate: %i\n", it->count);
 	Quaternion   * q = ecs_term (it, Quaternion  , 1);
-	Keyboard_SDL * c = ecs_term (it, Keyboard_SDL, 2);
+	SDL_Keyboard * c = ecs_term (it, SDL_Keyboard, 2);
 
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -102,7 +102,7 @@ static void systems_init (ecs_world_t * world)
 {
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);
 	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, Position4, Scale4, Quaternion, Transform);
-	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, Quaternion, $Keyboard_SDL);
+	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, Quaternion, $SDL_Keyboard);
 	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);
 
 	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_pointcloud.glvs;"CSC_SRCDIR"shader_pointcloud.glfs");

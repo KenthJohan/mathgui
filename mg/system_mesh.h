@@ -20,7 +20,7 @@
 static void system_mesh_set_rectangle (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, XLOG_ECS_ONSET, "Set rectangles n=%i", it->count);
-	Mesh_OpenGL * img = ecs_term(it, Mesh_OpenGL, 1);
+	GL_Mesh * img = ecs_term(it, GL_Mesh, 1);
 	Capacity * count = ecs_term(it, Capacity, 2);
 	Rectangle2f * wh = ecs_term(it, Rectangle2f, 3);
 	for (int32_t i = 0; i < it->count; ++i)
@@ -45,9 +45,9 @@ static void system_mesh_set_rectangle (ecs_iter_t *it)
 static void system_mesh_set (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, XLOG_ECS_ONSET, "Set meshes n=%i", it->count);
-	ECS_COLUMN (it, Mesh_OpenGL, mesh, 1);
+	ECS_COLUMN (it, GL_Mesh, mesh, 1);
 	ECS_COLUMN (it, Capacity, count, 2);
-	ECS_COLUMN (it, VAO_OpenGL, vao, 3);
+	ECS_COLUMN (it, GL_VertexArrayObject, vao, 3);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		glBindVertexArray (vao[i]);
@@ -71,10 +71,10 @@ static void system_mesh_set (ecs_iter_t *it)
 
 static void system_mesh_draw (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, Mesh_OpenGL, img, 1);//Shared
+	ECS_COLUMN (it, GL_Mesh, img, 1);//Shared
 	ECS_COLUMN (it, Capacity, count, 2);//Shared
-	ECS_COLUMN (it, VAO_OpenGL, vao, 3);//Shared
-	ECS_COLUMN (it, Tex2DArray_OpenGL, tbo, 4);//Shared
+	ECS_COLUMN (it, GL_VertexArrayObject, vao, 3);//Shared
+	ECS_COLUMN (it, GL_Tex2DArray, tbo, 4);//Shared
 	ECS_COLUMN (it, Position4, p, 5);
 	ECS_COLUMN (it, Scale4, s, 6);
 	ECS_COLUMN (it, Quaternion, q, 7);
@@ -110,10 +110,10 @@ static void system_mesh_draw (ecs_iter_t *it)
 
 static void system_mesh_draw1 (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, Mesh_OpenGL, img, 1);//Shared
+	ECS_COLUMN (it, GL_Mesh, img, 1);//Shared
 	ECS_COLUMN (it, Capacity, count, 2);//Shared
-	ECS_COLUMN (it, VAO_OpenGL, vao, 3);//Shared
-	ECS_COLUMN (it, Tex2DArray_OpenGL, tbo, 4);//Shared
+	ECS_COLUMN (it, GL_VertexArrayObject, vao, 3);//Shared
+	ECS_COLUMN (it, GL_Tex2DArray, tbo, 4);//Shared
 	ECS_COLUMN (it, Transform, t, 5);
 	glActiveTexture (GL_TEXTURE0);
 	glBindTexture (GL_TEXTURE_2D_ARRAY, tbo[0]);
@@ -135,7 +135,7 @@ static void system_mesh_draw1 (ecs_iter_t *it)
 static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, XLOG_ECS_ONADD, "glGenBuffers and glBindBuffer n=%i", it->count);
-	ECS_COLUMN (it, Mesh_OpenGL, mesh, 1);
+	ECS_COLUMN (it, GL_Mesh, mesh, 1);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
 		glGenBuffers (1, &mesh[i].vbop);
@@ -149,10 +149,10 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 
 static void system_mesh_init (ecs_world_t * world)
 {
-	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, Mesh_OpenGL);
-	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, Mesh_OpenGL, Capacity, VAO_OpenGL);
-	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, Mesh_OpenGL, Capacity, Rectangle2f);
-	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:Mesh_OpenGL, SHARED:Capacity, SHARED:VAO_OpenGL, SHARED:Tex2DArray_OpenGL, Transform);
+	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, GL_Mesh);
+	ECS_SYSTEM (world, system_mesh_set, EcsOnSet, GL_Mesh, Capacity, GL_VertexArrayObject);
+	ECS_SYSTEM (world, system_mesh_set_rectangle, EcsOnSet, GL_Mesh, Capacity, Rectangle2f);
+	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:GL_Mesh, SHARED:Capacity, SHARED:GL_VertexArrayObject, SHARED:GL_Tex2DArray, Transform);
 	//ECS_SYSTEM (world, system_mesh_draw, EcsOnUpdate, SHARED:component_mesh, SHARED:Count, SHARED:component_vao, SHARED:Tex2DArray_OpenGL, component_position, component_scale, component_quaternion);
 }
 

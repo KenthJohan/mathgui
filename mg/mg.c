@@ -39,7 +39,7 @@
 #define WIN_Y SDL_WINDOWPOS_UNDEFINED
 #define WIN_W 640
 #define WIN_H 480
-#define WIN_TITLE "MathGraphic v0.3"
+#define WIN_TITLE "Mattegrafik v0.4"
 
 
 
@@ -50,14 +50,14 @@
 static void test_ecs_addents (ecs_world_t * world)
 {
 
-	ECS_ENTITY (world, mytexture1, Tex2DArray_OpenGL);
-	ECS_ENTITY (world, mytexture2, Tex2DArray_OpenGL);
-	ECS_ENTITY (world, mytexture3, Tex2DArray_OpenGL);
-	ecs_set (world, mytexture1, Texture_OpenGL, {.unit = 0, .width = 100, .height = 100, .depth = 4});
-	ecs_set (world, mytexture2, Texture_OpenGL, {.unit = 0, .width = 50, .height = 50, .depth = 4});
-	ecs_set (world, mytexture3, Texture_OpenGL, {.unit = 0, .width = 200, .height = 200, .depth = 4});
+	ECS_ENTITY (world, mytexture1, GL_Tex2DArray);
+	ECS_ENTITY (world, mytexture2, GL_Tex2DArray);
+	ECS_ENTITY (world, mytexture3, GL_Tex2DArray);
+	ecs_set (world, mytexture1, GL_Texture, {.unit = 0, .width = 100, .height = 100, .depth = 4});
+	ecs_set (world, mytexture2, GL_Texture, {.unit = 0, .width = 50, .height = 50, .depth = 4});
+	ecs_set (world, mytexture3, GL_Texture, {.unit = 0, .width = 200, .height = 200, .depth = 4});
 
-	ECS_ENTITY (world, img, Mesh_OpenGL, VAO_OpenGL);
+	ECS_ENTITY (world, img, GL_Mesh, GL_VertexArrayObject);
 	ecs_set (world, img, Capacity, {6});
 	ecs_set (world, img, Rectangle2f, {{1.0f, 1.0f}});
 
@@ -111,8 +111,8 @@ static void test_eavnet (struct eavnet_context * ctx)
 		free (p);
 	}
 
-	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(Texture_OpenGL){0, 100, 100, 1}, 0);
-	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(Texture_OpenGL){0, 300, 300, 1}, 0);
+	eavnet_receiver (ctx, MYENT_TEXTURE1, MG_TEXTURE, &(GL_Texture){0, 100, 100, 1}, 0);
+	eavnet_receiver (ctx, MYENT_TEXTURE2, MG_TEXTURE, &(GL_Texture){0, 300, 300, 1}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_MESH, NULL, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_CAPACITY, &(Capacity){6}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(Rectangle2f){{1.0f, 1.0f}}, 0);
@@ -147,11 +147,11 @@ static void test_ecs_addlines (ecs_world_t * world)
 {
 	XLOG (XLOG_INF, XLOG_ECS, "Adding origin. (x,y,z) = (red, green, blue)");
 	ecs_entity_t e = ecs_new (world, 0);
-	ecs_add (world, e, Lines_OpenGL);
+	ecs_add (world, e, GL_Lines);
 	ecs_set (world, e, Capacity, {6});
 	ecs_set (world, e, Offset, {0});
 	ecs_set (world, e, Count, {6});
-	Lines_OpenGL const * lines = ecs_get (world, e, Lines_OpenGL);
+	GL_Lines const * lines = ecs_get (world, e, GL_Lines);
 
 	Position4 p[6] =
 	{
@@ -217,7 +217,7 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, TextureUV);
 	ECS_COMPONENT_DEFINE (world, Rectangle2f);
 	//SDL
-	ECS_COMPONENT_DEFINE (world, Keyboard_SDL);
+	ECS_COMPONENT_DEFINE (world, SDL_Keyboard);
 	//Arrays
 	ECS_COMPONENT_DEFINE (world, Capacity);
 	ECS_COMPONENT_DEFINE (world, Offset);
@@ -225,17 +225,17 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, Stride);
 	ECS_COMPONENT_DEFINE (world, Filename);
 	//OpenGL
-	ECS_COMPONENT_DEFINE (world, Texture_OpenGL);
-	ECS_COMPONENT_DEFINE (world, Pointcloud_OpenGL);
-	ECS_COMPONENT_DEFINE (world, VA_OpenGL);
-	ECS_COMPONENT_DEFINE (world, VAO_OpenGL);
-	ECS_COMPONENT_DEFINE (world, VBO_OpenGL);
-	ECS_COMPONENT_DEFINE (world, Tex2DArray_OpenGL);
-	ECS_COMPONENT_DEFINE (world, Program_OpenGL);
-	ECS_COMPONENT_DEFINE (world, Shader_OpenGL);
-	ECS_COMPONENT_DEFINE (world, Lines_OpenGL);
-	ECS_COMPONENT_DEFINE (world, Mesh_OpenGL);
-	ECS_TAG_DEFINE (world, ProgramLinked_OpenGL);
+	ECS_COMPONENT_DEFINE (world, GL_Texture);
+	ECS_COMPONENT_DEFINE (world, GL_Pointcloud);
+	ECS_COMPONENT_DEFINE (world, GL_VertexArrayObject);
+	ECS_COMPONENT_DEFINE (world, GL_VertexBufferObject);
+	ECS_COMPONENT_DEFINE (world, GL_Tex2DArray);
+	ECS_COMPONENT_DEFINE (world, GL_Program);
+	ECS_COMPONENT_DEFINE (world, GL_Shader);
+	ECS_COMPONENT_DEFINE (world, GL_Lines);
+	ECS_COMPONENT_DEFINE (world, GL_Mesh);
+	ECS_TAG_DEFINE (world, GL_ProgramLinked);
+
 
 
 	//system_opengl_init (world);
@@ -261,7 +261,7 @@ int main (int argc, char * argv[])
 
 	//ecs_entity_t e3 = e2[0];
 	const uint8_t * keyboard = SDL_GetKeyboardState (NULL);
-	ecs_singleton_set (world, Keyboard_SDL, {keyboard});
+	ecs_singleton_set (world, SDL_Keyboard, {keyboard});
 
 
 	//SDL_Thread * t = SDL_CreateThread (eavnet_thread_recv, "mythread", &eavcontext);

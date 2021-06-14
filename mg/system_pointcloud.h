@@ -23,7 +23,7 @@
 static void system_pointcloud_set (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, XLOG_ECS, "EcsOnSet n = %i", it->count);
-	ECS_COLUMN (it, Pointcloud_OpenGL, pc, 1);
+	ECS_COLUMN (it, GL_Pointcloud, pc, 1);
 	ECS_COLUMN (it, Capacity, c, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -56,7 +56,7 @@ static void system_pointcloud_set (ecs_iter_t *it)
 
 static void system_pointcloud_draw (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, Pointcloud_OpenGL, pc, 1);
+	ECS_COLUMN (it, GL_Pointcloud, pc, 1);
 	ECS_COLUMN (it, Offset, o, 2);
 	ECS_COLUMN (it, Count, c, 3);
 	glUseProgram (global_glprogram[GLPROGRAM_POINT]);
@@ -73,8 +73,8 @@ static void system_pointcloud_draw (ecs_iter_t *it)
 
 static void system_pointcloud_init (ecs_world_t * world)
 {
-	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, Pointcloud_OpenGL, Capacity);
-	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, Pointcloud_OpenGL, Offset, Count);
+	ECS_SYSTEM (world, system_pointcloud_set, EcsOnSet, GL_Pointcloud, Capacity);
+	ECS_SYSTEM (world, system_pointcloud_draw, EcsOnUpdate, GL_Pointcloud, Offset, Count);
 }
 
 

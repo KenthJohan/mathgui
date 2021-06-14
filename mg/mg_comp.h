@@ -17,40 +17,39 @@ typedef v2f32 Rectangle2f;
 
 
 //OpenGL
-typedef struct Texture_OpenGL
+typedef struct GL_Texture
 {
 	uint32_t unit;
 	uint32_t width;
 	uint32_t height;
 	uint32_t depth;
-} Texture_OpenGL;
+} GL_Texture;
 
-typedef struct Pointcloud_OpenGL
+typedef struct GL_Pointcloud
 {
 	uint32_t vao;
 	uint32_t vboc;
 	uint32_t vbop;
-} Pointcloud_OpenGL;
+} GL_Pointcloud;
 
-typedef struct Mesh_OpenGL
+typedef struct GL_Mesh
 {
 	uint32_t vbop;
 	uint32_t vbot;
-} Mesh_OpenGL;
+} GL_Mesh;
 
-typedef struct Lines_OpenGL
+typedef struct GL_Lines
 {
 	uint32_t vao;
 	uint32_t vbop;
 	uint32_t vboc;
-} Lines_OpenGL;
+} GL_Lines;
 
-typedef uint32_t VBO_OpenGL;
-typedef uint32_t VA_OpenGL;
-typedef uint32_t VAO_OpenGL;
-typedef uint32_t Tex2DArray_OpenGL;
-typedef int32_t Program_OpenGL;
-typedef int32_t Shader_OpenGL;
+typedef uint32_t GL_VertexBufferObject;
+typedef uint32_t GL_VertexArrayObject;
+typedef uint32_t GL_Tex2DArray;//glGenTextures, GL_TEXTURE_2D_ARRAY
+typedef int32_t GL_Program;
+typedef int32_t GL_Shader;
 
 
 //Array
@@ -63,10 +62,10 @@ typedef char Filename[256];
 
 
 //SDL:
-typedef struct Keyboard_SDL
+typedef struct SDL_Keyboard
 {
 	const uint8_t * keyboard; //SDL Keyboard
-} Keyboard_SDL;
+} SDL_Keyboard;
 
 
 

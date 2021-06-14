@@ -19,7 +19,7 @@
 static void system_lines_onset (ecs_iter_t *it)
 {
 	XLOG (XLOG_INF, XLOG_ECS, "EcsOnSet %i", it->count);
-	ECS_COLUMN (it, Lines_OpenGL, lines, 1);
+	ECS_COLUMN (it, GL_Lines, lines, 1);
 	ECS_COLUMN (it, Capacity, count, 2);
 	for (int32_t i = 0; i < it->count; ++i)
 	{
@@ -58,7 +58,7 @@ static void system_lines_onset (ecs_iter_t *it)
 
 static void system_lines_draw (ecs_iter_t *it)
 {
-	ECS_COLUMN (it, Lines_OpenGL, lines, 1);
+	ECS_COLUMN (it, GL_Lines, lines, 1);
 	ECS_COLUMN (it, Offset, o, 2);
 	ECS_COLUMN (it, Count, c, 3);
 	glUseProgram (global_glprogram[GLPROGRAM_LINE]);
@@ -73,8 +73,8 @@ static void system_lines_draw (ecs_iter_t *it)
 
 static void system_lines_init (ecs_world_t * world)
 {
-	ECS_SYSTEM (world, system_lines_draw, EcsOnUpdate, Lines_OpenGL, Offset, Count);
-	ECS_SYSTEM (world, system_lines_onset, EcsOnSet, Lines_OpenGL, Capacity);
+	ECS_SYSTEM (world, system_lines_draw, EcsOnUpdate, GL_Lines, Offset, Count);
+	ECS_SYSTEM (world, system_lines_onset, EcsOnSet, GL_Lines, Capacity);
 }
 
 

@@ -49,16 +49,16 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	switch (attribute)
 	{
 	case MG_MESH:
-		ecs_add (world, e, Mesh_OpenGL);
-		ecs_add (world, e, VAO_OpenGL);
+		ecs_add (world, e, GL_Mesh);
+		ecs_add (world, e, GL_VertexArrayObject);
 		break;
 
 	case MG_POINTCLOUD:
-		ecs_add (world, e, Pointcloud_OpenGL);
+		ecs_add (world, e, GL_Pointcloud);
 		break;
 
 	case MG_LINES:
-		ecs_add (world, e, Lines_OpenGL);
+		ecs_add (world, e, GL_Lines);
 		break;
 
 	case MG_CAPACITY:{
@@ -69,7 +69,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	case MG_POINTCLOUD_POS:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		Pointcloud_OpenGL const * cloud = ecs_get (world, e, Pointcloud_OpenGL);
+		GL_Pointcloud const * cloud = ecs_get (world, e, GL_Pointcloud);
 		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (cloud);
 		ASSERT_NOTNULL (count);
@@ -86,7 +86,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	case MG_POINTCLOUD_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		Pointcloud_OpenGL const * cloud = ecs_get (world, e, Pointcloud_OpenGL);
+		GL_Pointcloud const * cloud = ecs_get (world, e, GL_Pointcloud);
 		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (cloud);
 		ASSERT_NOTNULL (count);
@@ -100,7 +100,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	case MG_LINES_POS:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		Lines_OpenGL const * lines = ecs_get (world, e, Lines_OpenGL);
+		GL_Lines const * lines = ecs_get (world, e, GL_Lines);
 		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (lines);
 		ASSERT_NOTNULL (count);
@@ -116,7 +116,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 	case MG_LINES_COL:{
 		//ecs_add (world, e, component_pointcloud);
 		//ecs_progress (world, 0);
-		Lines_OpenGL const * lines = ecs_get (world, e, Lines_OpenGL);
+		GL_Lines const * lines = ecs_get (world, e, GL_Lines);
 		Capacity const * count = ecs_get (world, e, Capacity);
 		ASSERT_NOTNULL (lines);
 		ASSERT_NOTNULL (count);
@@ -128,8 +128,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;}
 
 	case MG_TEXTURE:{
-		ecs_add (world, e, Tex2DArray_OpenGL);
-		ecs_set_ptr (world, e, Texture_OpenGL, ptr);
+		ecs_add (world, e, GL_Tex2DArray);
+		ecs_set_ptr (world, e, GL_Texture, ptr);
 		break;}
 
 	case MG_POSITION:{
@@ -158,8 +158,8 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;}
 
 	case MG_TEXTURE_CONTENT:{
-		Texture_OpenGL const * texture = ecs_get (world, e, Texture_OpenGL);
-		Tex2DArray_OpenGL const * tex = ecs_get (world, e, Tex2DArray_OpenGL);
+		GL_Texture const * texture = ecs_get (world, e, GL_Texture);
+		GL_Tex2DArray const * tex = ecs_get (world, e, GL_Tex2DArray);
 		glActiveTexture (GL_TEXTURE0 + texture->unit);
 		glBindTexture (GL_TEXTURE_2D_ARRAY, *tex);//Depends on glActiveTexture()
 		ASSERT (value_size <= (texture->width * texture->height * sizeof (uint32_t)));
