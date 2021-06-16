@@ -142,12 +142,12 @@ static int gtext_init
 
 static void gtext_gen_pos (v4f32 pos[6], float x, float y, float w, float h)
 {
-	pos[0] = (v4f32){{x + 0, -y - 0, 0, 0}};
-	pos[1] = (v4f32){{x + w, -y - 0, 0, 0}};
-	pos[2] = (v4f32){{x + 0, -y - h, 0, 0}};
-	pos[3] = (v4f32){{x + w, -y - 0, 0, 0}};
-	pos[4] = (v4f32){{x + 0, -y - h, 0, 0}};
-	pos[5] = (v4f32){{x + w, -y - h, 0, 0}};
+	pos[0] = (v4f32){{x + 0, y + 0, 0, 0}};
+	pos[1] = (v4f32){{x + w, y + 0, 0, 0}};
+	pos[2] = (v4f32){{x + 0, y + h, 0, 0}};
+	pos[3] = (v4f32){{x + w, y + 0, 0, 0}};
+	pos[4] = (v4f32){{x + 0, y + h, 0, 0}};
+	pos[5] = (v4f32){{x + w, y + h, 0, 0}};
 }
 
 static void gtext_gen_uv (v2f32 uv[6], float x, float y, float w, float h)
@@ -189,9 +189,13 @@ static void render_text
 	{
 		/* Calculate the vertex and texture coordinates */
 		float x2 = x + c[*p].bl * sx;
-		float y2 = -y - c[*p].bt * sy;
+		float y2 = y + c[*p].bt * sy;
 		float w = c[*p].bw * sx;
-		float h = c[*p].bh * sy;
+		float h = c[*p].bh * -sy;
+		float tx = c[*p].tx;
+		float ty = c[*p].ty;
+		float tw = c[*p].bw / aw;
+		float th = c[*p].bh / ah;
 
 		/* Advance the cursor to the start of the next character */
 		x += c[*p].ax * sx;
@@ -202,65 +206,8 @@ static void render_text
 			continue;
 
 		gtext_gen_pos (pos + i, x2, y2, w, h);
-		gtext_gen_uv (uv + i, (c[*p].tx), (c[*p].ty), (c[*p].bw / aw), (c[*p].bh / ah));
+		gtext_gen_uv (uv + i, tx, ty, tw, th);
 		i += 6;
-		/*
-		uv[i].x = c[*p].tx;
-		uv[i].y = c[*p].ty;
-		i++;
-		uv[i].x = c[*p].tx + c[*p].bw / aw;
-		uv[i].y = c[*p].ty;
-		i++;
-		uv[i].x = c[*p].tx;
-		uv[i].y = c[*p].ty + c[*p].bh / ah;
-		i++;
-		uv[i].x = c[*p].tx + c[*p].bw / aw;
-		uv[i].y = c[*p].ty;
-		i++;
-		uv[i].x = c[*p].tx;
-		uv[i].y = c[*p].ty + c[*p].bh / ah;
-		i++;
-		uv[i].x = c[*p].tx + c[*p].bw / aw;
-		uv[i].y = c[*p].ty + c[*p].bh / ah;
-		i++;
-
-		*/
-		/*
-		pos[i].x = x2;
-		pos[i].y = -y2;
-		pos[i].z = 0;
-		pos[i].w = 0;
-		*/
-		/*
-		pos[i].x = x2 + w;
-		pos[i].y = -y2;
-		pos[i].z = 0;
-		pos[i].w = 0;
-		*/
-		/*
-		pos[i].x = x2;
-		pos[i].y = -y2 - h;
-		pos[i].z = 0;
-		pos[i].w = 0;
-		*/
-		/*
-		pos[i].x = x2 + w;
-		pos[i].y = -y2;
-		pos[i].z = 0;
-		pos[i].w = 0;
-		*/
-		/*
-		pos[i].x = x2;
-		pos[i].y = -y2 - h;
-		pos[i].z = 0;
-		pos[i].w = 0;
-		*/
-		/*
-		pos[i].x = x2 + w;
-		pos[i].y = -y2 - h;
-		pos[i].z = 0;
-		pos[i].w = 0;
-		*/
 	}
 
 
