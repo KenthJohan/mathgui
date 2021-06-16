@@ -52,7 +52,7 @@ SOURCES += ../flecs/flecs.c
 #SOURCES += flecs/flecs_player.c
 #SOURCES += flecs/flecs_json.c
 
-
+INCLUDEPATH += C:/msys64/mingw64/include/freetype2
 INCLUDEPATH += ../flecs
 #INCLUDEPATH += ../flecs/flecs-os_api-posix/include
 
@@ -60,7 +60,7 @@ INCLUDEPATH += ../flecs
 #LIBS += -lnng
 #LIBS += -lws2_32 -lwsock32 -lpthread
 
-LIBS += -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lglew32
+LIBS += -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lglew32 -lfreetype
 
 
 DEFINES += NNG_STATIC_LIB

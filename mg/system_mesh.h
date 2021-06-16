@@ -147,6 +147,13 @@ static void trigger_mesh_vbo_onadd (ecs_iter_t *it)
 }
 
 
+
+
+
+
+
+
+
 static void system_mesh_init (ecs_world_t * world)
 {
 	ECS_TRIGGER (world, trigger_mesh_vbo_onadd, EcsOnAdd, GL_Mesh);
@@ -155,6 +162,11 @@ static void system_mesh_init (ecs_world_t * world)
 	ECS_SYSTEM (world, system_mesh_draw1, EcsOnUpdate, SHARED:GL_Mesh, SHARED:Capacity, SHARED:GL_VertexArrayObject, SHARED:GL_Tex2DArray, Transform);
 	//ECS_SYSTEM (world, system_mesh_draw, EcsOnUpdate, SHARED:component_mesh, SHARED:Count, SHARED:component_vao, SHARED:Tex2DArray_OpenGL, component_position, component_scale, component_quaternion);
 }
+
+
+
+
+
 
 
 

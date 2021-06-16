@@ -15,7 +15,7 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <stdio.h>
-
+#include <cglm/cam.h>
 
 
 
@@ -34,6 +34,7 @@
 #include "eavnet.h"
 #include "eavnet_recv.h"
 
+#include "text.h"
 
 #define WIN_X SDL_WINDOWPOS_UNDEFINED
 #define WIN_Y SDL_WINDOWPOS_UNDEFINED
@@ -193,6 +194,10 @@ int main (int argc, char * argv[])
 	SDL_GLContext context;
 	csc_sdlglew_create_window (&window, &context, WIN_TITLE, WIN_X, WIN_Y, WIN_W, WIN_H, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
 
+
+
+
+
 	glEnable (GL_VERTEX_PROGRAM_POINT_SIZE);
 	glLineWidth (4.0f);
 
@@ -203,6 +208,7 @@ int main (int argc, char * argv[])
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LEQUAL);
 	glDepthRange(0.0f, 1.0f);
+
 
 
 	ecs_world_t * world = ecs_init();
@@ -251,6 +257,17 @@ int main (int argc, char * argv[])
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
+
+
+
+
+	struct gtext_context gtext_ctx;
+	{
+		GLint p = csc_gl_program_from_files1 (CSC_SRCDIR"shader_text.glvs;"CSC_SRCDIR"shader_text.glfs");
+		glLinkProgram (p);
+		gtext_context_init (&gtext_ctx, "consola.ttf", p);
+	}
+
 
 
 
@@ -315,6 +332,9 @@ int main (int argc, char * argv[])
 
 		}
 
+
+
+
 		{
 			//Control graphics camera
 			csc_sdl_motion_wasd (keyboard, &global_gcam.d);
@@ -330,12 +350,10 @@ int main (int argc, char * argv[])
 				//global_gcam.
 				//XLOG(XLOG_INF, "SDL_GetRelativeMouseState %i %i\n", mdltx, mdlty);
 				//SDL_ShowCursor(SDL_DISABLE);
-				/*
-				int w;
-				int h;
-				SDL_GetWindowSize (window, &w, &h);
-				SDL_WarpMouseInWindow (window, w / 2, h / 2);
-				*/
+				//int w;
+				//int h;
+				//SDL_GetWindowSize (window, &w, &h);
+				//SDL_WarpMouseInWindow (window, w / 2, h / 2);
 			}
 
 			if (SDL_GetModState() & KMOD_CAPS)
@@ -351,18 +369,22 @@ int main (int argc, char * argv[])
 			csc_gcam_update (&global_gcam);
 		}
 
-		glClearColor (0.3f, 0.3f, 0.3f, 1.0f);
+
+
+
+		glClearColor (0.2f, 0.2f, 0.2f, 1.0f);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		eavnet_receiver1 (&eavcontext);
 
 
-
+		gtext_context_draw (&gtext_ctx, "Hello", 0.0f, 0.0f, 2.0f / 400, 2.0f / 400, global_gcam.mvp.m);
 
 
 		if (keyboard[SDL_SCANCODE_1])
 		{
+
 			//qf32_rotate2_xyza (*ecs_get_mut (global_world, e3, component_quaternion, NULL), keyboard[SDL_SCANCODE_1], keyboard[SDL_SCANCODE_2], keyboard[SDL_SCANCODE_3], 0.01f);
 		}
 
