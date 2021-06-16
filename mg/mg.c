@@ -29,6 +29,7 @@
 #include "system_lines.h"
 #include "system_texture.h"
 #include "system_camera.h"
+#include "system_text.h"
 
 #include "mg_attr.h"
 #include "eavnet.h"
@@ -215,6 +216,7 @@ int main (int argc, char * argv[])
 	//Spatial
 	ECS_COMPONENT_DEFINE (world, Color);
 	ECS_COMPONENT_DEFINE (world, Position4);
+	ECS_COMPONENT_DEFINE (world, Position3);
 	ECS_COMPONENT_DEFINE (world, Scale4);
 	ECS_COMPONENT_DEFINE (world, Quaternion);
 	ECS_COMPONENT_DEFINE (world, QuaternionDelta);
@@ -230,6 +232,7 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, Count);
 	ECS_COMPONENT_DEFINE (world, Stride);
 	ECS_COMPONENT_DEFINE (world, Filename);
+	ECS_COMPONENT_DEFINE (world, Text);
 	//OpenGL
 	ECS_COMPONENT_DEFINE (world, GL_Texture);
 	ECS_COMPONENT_DEFINE (world, GL_Pointcloud);
@@ -254,6 +257,7 @@ int main (int argc, char * argv[])
 	system_mesh_init (world);
 	system_pointcloud_init (world);
 	system_camera_init (world);
+	system_text_init (world);
 	//test_ecs_onset (world);
 	//test_ecs_addents (world);//For testing
 	test_ecs_addlines (world);
@@ -261,12 +265,6 @@ int main (int argc, char * argv[])
 
 
 
-	struct gtext_context gtext_ctx;
-	{
-		GLint p = csc_gl_program_from_files1 (CSC_SRCDIR"shader_text.glvs;"CSC_SRCDIR"shader_text.glfs");
-		glLinkProgram (p);
-		gtext_context_init (&gtext_ctx, "consola.ttf", p);
-	}
 
 
 

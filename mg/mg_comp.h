@@ -5,6 +5,7 @@
 
 //Spatial
 typedef uint32_t Color;
+typedef v3f32 Position3;
 typedef v4f32 Position4;
 typedef v4f32 Scale4;
 typedef qf32 Quaternion;
@@ -58,6 +59,10 @@ typedef uint32_t Capacity;
 typedef uint32_t Count;
 typedef uint32_t Offset;
 typedef char Filename[256];
+typedef struct Text
+{
+	char const * value;
+} Text;
 
 
 
@@ -66,8 +71,6 @@ typedef struct SDL_Keyboard
 {
 	const uint8_t * keyboard; //SDL Keyboard
 } SDL_Keyboard;
-
-
 
 
 

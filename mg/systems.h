@@ -10,6 +10,8 @@
 #include "csc/csc_xlog.h"
 
 
+#include "text.h"
+#include "mg_compdef.h"
 #include "mg_comp.h"
 
 
@@ -22,6 +24,7 @@ enum glprogram_type
 	GLPROGRAM_POINT,
 	GLPROGRAM_LINE,
 	GLPROGRAM_MESH,
+	GLPROGRAM_TEXT,
 	GLPROGRAM_COUNT,
 };
 
@@ -31,12 +34,17 @@ enum gluniform_type
 	GLUNIFORM_LINE_MVP,
 	GLUNIFORM_MESH_MVP,
 	GLUNIFORM_MESH_TEX0,
+	GLUNIFORM_TEXT_MVP,
+	GLUNIFORM_TEXT_TEX0,
 	GLUNIFORM_COUNT,
 };
 
 static GLint global_glprogram[GLPROGRAM_COUNT];
 static GLint global_gluniform[GLUNIFORM_COUNT];
 static struct csc_gcam global_gcam;
+
+
+static struct gtext_context gtext_ctx;
 
 
 
@@ -100,6 +108,20 @@ static void system_transform_onset (ecs_iter_t *it)
 
 static void systems_init (ecs_world_t * world)
 {
+	ecs_set_component_actions(world, Text,
+	{
+	.ctor = ecs_ctor(Text),
+	.dtor = ecs_dtor(Text),
+	.copy = ecs_copy(Text),
+	.move = ecs_move(Text)
+	});
+
+	ecs_entity_t e = ecs_new(world, 0);
+	ecs_set (world, e, Text, {"Lemon"});
+	ecs_set (world, e, Position3, {{0.0f, 0.0f, 0.0f}});
+	printf ("e: %s\n", ecs_get(world, e, Text)->value);
+
+
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);
 	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, Position4, Scale4, Quaternion, Transform);
 	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, Quaternion, $SDL_Keyboard);
@@ -108,17 +130,27 @@ static void systems_init (ecs_world_t * world)
 	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_pointcloud.glvs;"CSC_SRCDIR"shader_pointcloud.glfs");
 	global_glprogram[GLPROGRAM_LINE] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_line.glvs;"CSC_SRCDIR"shader_line.glfs");
 	global_glprogram[GLPROGRAM_MESH] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_image.glvs;"CSC_SRCDIR"shader_image.glfs");
+	global_glprogram[GLPROGRAM_TEXT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_text.glvs;"CSC_SRCDIR"shader_text.glfs");
 	glLinkProgram (global_glprogram[GLPROGRAM_POINT]);
 	glLinkProgram (global_glprogram[GLPROGRAM_LINE]);
 	glLinkProgram (global_glprogram[GLPROGRAM_MESH]);
+	glLinkProgram (global_glprogram[GLPROGRAM_TEXT]);
 
 	global_gluniform[GLUNIFORM_POINT_MVP] = glGetUniformLocation (global_glprogram[GLPROGRAM_POINT], "mvp");
 	global_gluniform[GLUNIFORM_LINE_MVP] = glGetUniformLocation (global_glprogram[GLPROGRAM_LINE], "mvp");
 	global_gluniform[GLUNIFORM_MESH_MVP] = glGetUniformLocation (global_glprogram[GLPROGRAM_MESH], "mvp");
 	global_gluniform[GLUNIFORM_MESH_TEX0] = glGetUniformLocation (global_glprogram[GLPROGRAM_MESH], "tex0");
+	global_gluniform[GLUNIFORM_TEXT_MVP] = glGetUniformLocation (global_glprogram[GLPROGRAM_MESH], "mvp");
+	global_gluniform[GLUNIFORM_TEXT_TEX0] = glGetUniformLocation (global_glprogram[GLPROGRAM_MESH], "tex0");
 
 	csc_gcam_init (&global_gcam);
 	global_gcam.p.z = -1.0f;
+
+	{
+		//GLint p = csc_gl_program_from_files1 (CSC_SRCDIR"shader_text.glvs;"CSC_SRCDIR"shader_text.glfs");
+		//glLinkProgram (p);
+		gtext_context_init (&gtext_ctx, "consola.ttf", global_glprogram[GLPROGRAM_TEXT]);
+	}
 }
 
 

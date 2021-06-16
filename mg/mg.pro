@@ -28,6 +28,7 @@ HEADERS += system_texture.h
 HEADERS += system_mesh.h
 HEADERS += system_pointcloud.h
 HEADERS += system_camera.h
+HEADERS += system_text.h
 HEADERS += mg_comp.h
 HEADERS += mg_compdef.h
 HEADERS += mg_attr.h

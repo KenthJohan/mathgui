@@ -140,6 +140,26 @@ static int gtext_init
 
 
 
+static void gtext_gen_pos (v4f32 pos[6], float x, float y, float w, float h)
+{
+	pos[0] = (v4f32){{x + 0, -y - 0, 0, 0}};
+	pos[1] = (v4f32){{x + w, -y - 0, 0, 0}};
+	pos[2] = (v4f32){{x + 0, -y - h, 0, 0}};
+	pos[3] = (v4f32){{x + w, -y - 0, 0, 0}};
+	pos[4] = (v4f32){{x + 0, -y - h, 0, 0}};
+	pos[5] = (v4f32){{x + w, -y - h, 0, 0}};
+}
+
+static void gtext_gen_uv (v2f32 uv[6], float x, float y, float w, float h)
+{
+	uv[0] = (v2f32){{x + 0, y + 0}};
+	uv[1] = (v2f32){{x + w, y + 0}};
+	uv[2] = (v2f32){{x + 0, y + h}};
+	uv[3] = (v2f32){{x + w, y + 0}};
+	uv[4] = (v2f32){{x + 0, y + h}};
+	uv[5] = (v2f32){{x + w, y + h}};
+}
+
 
 
 /**
@@ -181,48 +201,66 @@ static void render_text
 		if (!w || !h)
 			continue;
 
+		gtext_gen_pos (pos + i, x2, y2, w, h);
+		gtext_gen_uv (uv + i, (c[*p].tx), (c[*p].ty), (c[*p].bw / aw), (c[*p].bh / ah));
+		i += 6;
+		/*
+		uv[i].x = c[*p].tx;
+		uv[i].y = c[*p].ty;
+		i++;
+		uv[i].x = c[*p].tx + c[*p].bw / aw;
+		uv[i].y = c[*p].ty;
+		i++;
+		uv[i].x = c[*p].tx;
+		uv[i].y = c[*p].ty + c[*p].bh / ah;
+		i++;
+		uv[i].x = c[*p].tx + c[*p].bw / aw;
+		uv[i].y = c[*p].ty;
+		i++;
+		uv[i].x = c[*p].tx;
+		uv[i].y = c[*p].ty + c[*p].bh / ah;
+		i++;
+		uv[i].x = c[*p].tx + c[*p].bw / aw;
+		uv[i].y = c[*p].ty + c[*p].bh / ah;
+		i++;
+
+		*/
+		/*
 		pos[i].x = x2;
 		pos[i].y = -y2;
 		pos[i].z = 0;
 		pos[i].w = 0;
-		uv[i].x = c[*p].tx;
-		uv[i].y = c[*p].ty;
-		i++;
+		*/
+		/*
 		pos[i].x = x2 + w;
 		pos[i].y = -y2;
 		pos[i].z = 0;
 		pos[i].w = 0;
-		uv[i].x = c[*p].tx + c[*p].bw / aw;
-		uv[i].y = c[*p].ty;
-		i++;
+		*/
+		/*
 		pos[i].x = x2;
 		pos[i].y = -y2 - h;
 		pos[i].z = 0;
 		pos[i].w = 0;
-		uv[i].x = c[*p].tx;
-		uv[i].y = c[*p].ty + c[*p].bh / ah;
-		i++;
+		*/
+		/*
 		pos[i].x = x2 + w;
 		pos[i].y = -y2;
 		pos[i].z = 0;
 		pos[i].w = 0;
-		uv[i].x = c[*p].tx + c[*p].bw / aw;
-		uv[i].y = c[*p].ty;
-		i++;
+		*/
+		/*
 		pos[i].x = x2;
 		pos[i].y = -y2 - h;
 		pos[i].z = 0;
 		pos[i].w = 0;
-		uv[i].x = c[*p].tx;
-		uv[i].y = c[*p].ty + c[*p].bh / ah;
-		i++;
+		*/
+		/*
 		pos[i].x = x2 + w;
 		pos[i].y = -y2 - h;
 		pos[i].z = 0;
 		pos[i].w = 0;
-		uv[i].x = c[*p].tx + c[*p].bw / aw;
-		uv[i].y = c[*p].ty + c[*p].bh / ah;
-		i++;
+		*/
 	}
 
 
