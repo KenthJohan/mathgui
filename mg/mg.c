@@ -118,13 +118,13 @@ static void test_eavnet (struct eavnet_context * ctx)
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_MESH, NULL, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_CAPACITY, &(Capacity){6}, 0);
 	eavnet_receiver (ctx, MYENT_MESH_RECTANGLE, MG_RECTANGLE, &(Rectangle2f){{1.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION,&(Position4){{3.0f, 1.0f, 0.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE, &(Position4){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_POSITION4,&(Position4){{3.0f, 1.0f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_SCALE4, &(Position4){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_QUATERNION, &(Position4){{0.0f, 0.0f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG1, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE1}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_POSITION, &(Position4){{4.0f, 1.0f, 0.0f, 1.0f}}, 0);
-	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_SCALE, &(Position4){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_POSITION4, &(Position4){{4.0f, 1.0f, 0.0f, 1.0f}}, 0);
+	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_SCALE4, &(Position4){{0.3f, 0.3f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_QUATERNION, &(Position4){{0.0f, 0.0f, 0.0f, 1.0f}}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_MESH_RECTANGLE}, 0);
 	eavnet_receiver (ctx, MYENT_DRAW_IMG2, MG_ADD_INSTANCEOF, &(uint32_t){MYENT_TEXTURE2}, 0);

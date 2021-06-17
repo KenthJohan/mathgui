@@ -132,12 +132,28 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		ecs_set_ptr (world, e, GL_Texture, ptr);
 		break;}
 
-	case MG_POSITION:{
+	case MG_POSITION4:{
 		ecs_set_ptr (world, e, Position4, ptr);
 		break;}
 
-	case MG_SCALE:{
+	case MG_POSITION3:{
+		ecs_set_ptr (world, e, Position4, ptr);
+		break;}
+
+	case MG_POSITION2:{
+		ecs_set_ptr (world, e, Position4, ptr);
+		break;}
+
+	case MG_SCALE4:{
 		ecs_set_ptr (world, e, Scale4, ptr);
+		break;}
+
+	case MG_SCALE3:{
+		ecs_set_ptr (world, e, Scale2, ptr);
+		break;}
+
+	case MG_SCALE2:{
+		ecs_set_ptr (world, e, Scale2, ptr);
 		break;}
 
 	case MG_QUATERNION:{
@@ -166,6 +182,10 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		{
 			glTexSubImage3D (GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, texture->width, texture->height, 1, GL_RGBA, GL_UNSIGNED_BYTE, ptr);
 		}
+		break;}
+
+	case MG_TEXT:{
+		ecs_set (world, e, Text, {ptr});
 		break;}
 	}
 
