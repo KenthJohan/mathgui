@@ -5,8 +5,9 @@
 
 //Spatial
 typedef uint32_t Color;
-typedef v3f32 Position3;
 typedef v4f32 Position4;
+typedef v3f32 Position3;
+typedef v3f32 Position2;
 typedef v4f32 Scale4;
 typedef v4f32 Scale3;
 typedef v4f32 Scale2;

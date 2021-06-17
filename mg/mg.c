@@ -217,6 +217,7 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, Color);
 	ECS_COMPONENT_DEFINE (world, Position4);
 	ECS_COMPONENT_DEFINE (world, Position3);
+	ECS_COMPONENT_DEFINE (world, Position2);
 	ECS_COMPONENT_DEFINE (world, Scale4);
 	ECS_COMPONENT_DEFINE (world, Scale3);
 	ECS_COMPONENT_DEFINE (world, Scale2);

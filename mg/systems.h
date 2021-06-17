@@ -116,6 +116,8 @@ static void systems_init (ecs_world_t * world)
 	.move = ecs_move(Text)
 	});
 
+	/*
+	//Testing text system:
 	ecs_entity_t e1 = ecs_new (world, 0);
 	ecs_set (world, e1, Text, {"Lemon1"});
 	ecs_set (world, e1, Position3, {{0.0f, 0.0f, 0.0f}});
@@ -125,6 +127,7 @@ static void systems_init (ecs_world_t * world)
 	ecs_set (world, e2, Position3, {{0.0f, 0.5f, 1.0f}});
 	ecs_set (world, e2, Scale2, {{0.01f, 0.01f}});
 	printf ("e: %s\n", ecs_get (world, e1, Text)->value);
+	*/
 
 
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);

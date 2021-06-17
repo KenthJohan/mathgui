@@ -137,11 +137,11 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;}
 
 	case MG_POSITION3:{
-		ecs_set_ptr (world, e, Position4, ptr);
+		ecs_set_ptr (world, e, Position3, ptr);
 		break;}
 
 	case MG_POSITION2:{
-		ecs_set_ptr (world, e, Position4, ptr);
+		ecs_set_ptr (world, e, Position2, ptr);
 		break;}
 
 	case MG_SCALE4:{
@@ -149,7 +149,7 @@ static void eavnet_receiver (struct eavnet_context * ctx, uint32_t entity, uint3
 		break;}
 
 	case MG_SCALE3:{
-		ecs_set_ptr (world, e, Scale2, ptr);
+		ecs_set_ptr (world, e, Scale3, ptr);
 		break;}
 
 	case MG_SCALE2:{

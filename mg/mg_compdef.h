@@ -15,6 +15,7 @@ ECS_COMPONENT_DECLARE (Text);
 ECS_COMPONENT_DECLARE (Color);
 ECS_COMPONENT_DECLARE (Position4);
 ECS_COMPONENT_DECLARE (Position3);
+ECS_COMPONENT_DECLARE (Position2);
 ECS_COMPONENT_DECLARE (Scale4);
 ECS_COMPONENT_DECLARE (Scale3);
 ECS_COMPONENT_DECLARE (Scale2);
@@ -68,20 +69,20 @@ ptr->value = NULL;
 
 // Component destructor
 ECS_DTOR(Text, ptr, {
-XLOG (XLOG_INF, XLOG_ECS, "ptr: %s", ptr->value);
+//XLOG (XLOG_INF, XLOG_ECS, "ptr: %s", ptr->value);
 free((void*)ptr->value);
 });
 
 // Component copy
 ECS_COPY(Text, dst, src, {
-XLOG (XLOG_INF, XLOG_ECS, "dst: %s src: %s", dst->value, src->value);
+//XLOG (XLOG_INF, XLOG_ECS, "dst: %s src: %s", dst->value, src->value);
 free((void*)dst->value);
 dst->value = strdup(src->value);
 });
 
 // Component move
 ECS_MOVE(Text, dst, src, {
-XLOG (XLOG_INF, XLOG_ECS, "dst: %s src: %s", dst->value, src->value);
+//XLOG (XLOG_INF, XLOG_ECS, "dst: %s src: %s", dst->value, src->value);
 dst->value = src->value;
 src->value = NULL;
 });

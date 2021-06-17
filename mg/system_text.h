@@ -25,7 +25,7 @@ static void system_text_draw (ecs_iter_t *it)
 	ECS_COLUMN (it, Text, text, 1);
 	ECS_COLUMN (it, Position3, p, 2);
 	ECS_COLUMN (it, Scale2, s, 3);
-	XLOG (XLOG_INF, XLOG_ECS, "%i", it->count);
+	//XLOG (XLOG_INF, XLOG_ECS, "%i", it->count);
 	v4f32 pos[6 * 100];
 	v2f32 uv[6 * 100];
 	uint32_t n = 0;
