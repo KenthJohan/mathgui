@@ -218,6 +218,8 @@ int main (int argc, char * argv[])
 	ECS_COMPONENT_DEFINE (world, Position4);
 	ECS_COMPONENT_DEFINE (world, Position3);
 	ECS_COMPONENT_DEFINE (world, Scale4);
+	ECS_COMPONENT_DEFINE (world, Scale3);
+	ECS_COMPONENT_DEFINE (world, Scale2);
 	ECS_COMPONENT_DEFINE (world, Quaternion);
 	ECS_COMPONENT_DEFINE (world, QuaternionDelta);
 	ECS_COMPONENT_DEFINE (world, Transform);
@@ -377,7 +379,7 @@ int main (int argc, char * argv[])
 		eavnet_receiver1 (&eavcontext);
 
 
-		gtext_context_draw (&gtext_ctx, "Hello", 0.0f, 0.0f, 2.0f / 400, 2.0f / 400, global_gcam.mvp.m);
+		//gtext_context_draw (&gtext_ctx, "Hello", 0.0f, 0.0f, 0.01f, 0.01f, global_gcam.mvp.m);
 
 
 		if (keyboard[SDL_SCANCODE_1])

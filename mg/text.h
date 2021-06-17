@@ -140,14 +140,14 @@ static int gtext_init
 
 
 
-static void gtext_gen_pos (v4f32 pos[6], float x, float y, float w, float h)
+static void gtext_gen_pos (v4f32 pos[6], float x, float y, float z, float w, float h)
 {
-	pos[0] = (v4f32){{x + 0, y + 0, 0, 0}};
-	pos[1] = (v4f32){{x + w, y + 0, 0, 0}};
-	pos[2] = (v4f32){{x + 0, y + h, 0, 0}};
-	pos[3] = (v4f32){{x + w, y + 0, 0, 0}};
-	pos[4] = (v4f32){{x + 0, y + h, 0, 0}};
-	pos[5] = (v4f32){{x + w, y + h, 0, 0}};
+	pos[0] = (v4f32){{x + 0, y + 0, z, 0}};
+	pos[1] = (v4f32){{x + w, y + 0, z, 0}};
+	pos[2] = (v4f32){{x + 0, y + h, z, 0}};
+	pos[3] = (v4f32){{x + w, y + 0, z, 0}};
+	pos[4] = (v4f32){{x + 0, y + h, z, 0}};
+	pos[5] = (v4f32){{x + w, y + h, z, 0}};
 }
 
 static void gtext_gen_uv (v2f32 uv[6], float x, float y, float w, float h)
@@ -160,6 +160,34 @@ static void gtext_gen_uv (v2f32 uv[6], float x, float y, float w, float h)
 	uv[5] = (v2f32){{x + w, y + h}};
 }
 
+static uint32_t gtext_gen
+(v4f32 pos[], v2f32 uv[], const char *text, struct gchar c[], uint32_t n, float aw, float ah, float x, float y, float z, float sx, float sy)
+{
+	uint32_t i = 0;
+	const uint8_t *p;
+	for (p = (const uint8_t *)text; *p; p++)
+	{
+		if (i+6 > n) {return n;}
+		// Calculate the vertex and texture coordinates
+		float x2 = x + c[*p].bl * sx;
+		float y2 = y + c[*p].bt * sy;
+		float w = c[*p].bw * sx;
+		float h = c[*p].bh * -sy;
+		float tx = c[*p].tx;
+		float ty = c[*p].ty;
+		float tw = c[*p].bw / aw;
+		float th = c[*p].bh / ah;
+		// Advance the cursor to the start of the next character
+		x += c[*p].ax * sx;
+		y += c[*p].ay * sy;
+		// Skip glyphs that have no pixels */
+		if (!w || !h) {continue;}
+		gtext_gen_pos (pos + i, x2, y2, z, w, h);
+		gtext_gen_uv (uv + i, tx, ty, tw, th);
+		i += 6;
+	}
+	return i;
+}
 
 
 /**
@@ -177,6 +205,7 @@ static void render_text
 		GLuint vbo_uv,
 		float x, //Coordinate x
 		float y, //Coordinate y
+		float z, //Coordinate z
 		float sx,
 		float sy
 )
@@ -184,42 +213,8 @@ static void render_text
 
 	v4f32 pos[6 * 100];
 	v2f32 uv[6 * 100];
-	int i = 0;
-	for (const uint8_t *p = (const uint8_t *)text; *p; p++)
-	{
-		/* Calculate the vertex and texture coordinates */
-		float x2 = x + c[*p].bl * sx;
-		float y2 = y + c[*p].bt * sy;
-		float w = c[*p].bw * sx;
-		float h = c[*p].bh * -sy;
-		float tx = c[*p].tx;
-		float ty = c[*p].ty;
-		float tw = c[*p].bw / aw;
-		float th = c[*p].bh / ah;
-
-		/* Advance the cursor to the start of the next character */
-		x += c[*p].ax * sx;
-		y += c[*p].ay * sy;
-
-		/* Skip glyphs that have no pixels */
-		if (!w || !h)
-			continue;
-
-		gtext_gen_pos (pos + i, x2, y2, w, h);
-		gtext_gen_uv (uv + i, tx, ty, tw, th);
-		i += 6;
-	}
-
-
-
-	/*
-	pos[0] = (v4f32){{0.0f, 0.0f, 0.0f, 0.0f}};
-	pos[1] = (v4f32){{0.0f, 1.0f, 0.0f, 0.0f}};
-	pos[2] = (v4f32){{1.0f, 1.0f, 0.0f, 0.0f}};
-	*/
-
-
-
+	uint32_t i = 0;
+	i = gtext_gen (pos, uv, text, c, 6*100, aw, ah, x, y, z, sx, sy);
 	/* Draw all the character on the screen in one go */
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
 	glBufferData (GL_ARRAY_BUFFER, sizeof(v4f32)*i, pos, GL_DYNAMIC_DRAW);
@@ -266,7 +261,7 @@ static void gtext_context_init(struct gtext_context * ctx, char const * fontname
 	glGenTextures(1, &ctx->tex);
 	glBindTexture(GL_TEXTURE_2D, ctx->tex);
 	glUniform1i(ctx->uniform_tex, 0);
-	gtext_init (fontname, ctx->c, ctx->uniform_tex, 48, &ctx->atlas);
+	gtext_init (fontname, ctx->c, ctx->uniform_tex, 24, &ctx->atlas);
 	// Set up the VBO for our vertex data
 
 	glGenBuffers(1, &ctx->vbo_pos);
@@ -283,7 +278,7 @@ static void gtext_context_init(struct gtext_context * ctx, char const * fontname
 	/**/
 }
 
-static void gtext_context_draw(struct gtext_context * ctx, char const * text, float x, float y, float sx, float sy, float mvp[4*4])
+static void gtext_context_draw(struct gtext_context * ctx, char const * text, float x, float y, float z, float sx, float sy, float mvp[4*4])
 {
 	glBindVertexArray (ctx->vao);
 	glUseProgram(ctx->program);
@@ -291,7 +286,7 @@ static void gtext_context_draw(struct gtext_context * ctx, char const * text, fl
 	glBindTexture (GL_TEXTURE_2D, ctx->tex);
 	glUniform1i (ctx->uniform_tex, 0);
 	glUniformMatrix4fv (ctx->uniform_mvp, 1, GL_FALSE, (const GLfloat *) mvp);
-	render_text (text, ctx->c, ctx->atlas.w, ctx->atlas.h, ctx->vbo_pos, ctx->vbo_uv, x, y, sx, sy);
+	render_text (text, ctx->c, ctx->atlas.w, ctx->atlas.h, ctx->vbo_pos, ctx->vbo_uv, x, y, z, sx, sy);
 }
 
 

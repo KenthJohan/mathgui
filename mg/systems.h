@@ -116,10 +116,15 @@ static void systems_init (ecs_world_t * world)
 	.move = ecs_move(Text)
 	});
 
-	ecs_entity_t e = ecs_new(world, 0);
-	ecs_set (world, e, Text, {"Lemon"});
-	ecs_set (world, e, Position3, {{0.0f, 0.0f, 0.0f}});
-	printf ("e: %s\n", ecs_get(world, e, Text)->value);
+	ecs_entity_t e1 = ecs_new (world, 0);
+	ecs_set (world, e1, Text, {"Lemon1"});
+	ecs_set (world, e1, Position3, {{0.0f, 0.0f, 0.0f}});
+	ecs_set (world, e1, Scale2, {{0.01f, 0.01f}});
+	ecs_entity_t e2 = ecs_new (world, 0);
+	ecs_set (world, e2, Text, {"Lemon2"});
+	ecs_set (world, e2, Position3, {{0.0f, 0.5f, 1.0f}});
+	ecs_set (world, e2, Scale2, {{0.01f, 0.01f}});
+	printf ("e: %s\n", ecs_get (world, e1, Text)->value);
 
 
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);
@@ -146,11 +151,8 @@ static void systems_init (ecs_world_t * world)
 	csc_gcam_init (&global_gcam);
 	global_gcam.p.z = -1.0f;
 
-	{
-		//GLint p = csc_gl_program_from_files1 (CSC_SRCDIR"shader_text.glvs;"CSC_SRCDIR"shader_text.glfs");
-		//glLinkProgram (p);
-		gtext_context_init (&gtext_ctx, "consola.ttf", global_glprogram[GLPROGRAM_TEXT]);
-	}
+
+	gtext_context_init (&gtext_ctx, "consola.ttf", global_glprogram[GLPROGRAM_TEXT]);
 }
 
 

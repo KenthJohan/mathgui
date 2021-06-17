@@ -8,6 +8,8 @@ typedef uint32_t Color;
 typedef v3f32 Position3;
 typedef v4f32 Position4;
 typedef v4f32 Scale4;
+typedef v4f32 Scale3;
+typedef v4f32 Scale2;
 typedef qf32 Quaternion;
 typedef qf32 QuaternionDelta;
 typedef m4f32 Transform;

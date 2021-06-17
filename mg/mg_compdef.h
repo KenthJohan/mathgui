@@ -16,6 +16,8 @@ ECS_COMPONENT_DECLARE (Color);
 ECS_COMPONENT_DECLARE (Position4);
 ECS_COMPONENT_DECLARE (Position3);
 ECS_COMPONENT_DECLARE (Scale4);
+ECS_COMPONENT_DECLARE (Scale3);
+ECS_COMPONENT_DECLARE (Scale2);
 ECS_COMPONENT_DECLARE (Quaternion);
 ECS_COMPONENT_DECLARE (TextureUV);
 ECS_COMPONENT_DECLARE (Rectangle2f);
@@ -60,7 +62,7 @@ ECS_COMPONENT_DECLARE (GL_Mesh);
 
 // Component constructor
 ECS_CTOR(Text, ptr, {
-XLOG (XLOG_INF, XLOG_ECS, "ptr: %s", ptr->value);
+//XLOG (XLOG_INF, XLOG_ECS, "ptr: %s", ptr->value);
 ptr->value = NULL;
 });
 
