@@ -6,6 +6,7 @@ CONFIG -= qt
 DEFINES += CSC_SRCDIR=\\\"../mg/\\\"
 #DEFINES += DEBUG
 
+HEADERS += csc/csc_gft.h
 HEADERS += csc/csc_math.h
 HEADERS += csc/csc_qf32.h
 HEADERS += csc/csc_mf32.h

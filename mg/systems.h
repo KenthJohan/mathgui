@@ -8,6 +8,7 @@
 #include "csc/csc_gcam.h"
 #include "csc/csc_qf32.h"
 #include "csc/csc_xlog.h"
+#include "csc/csc_gft.h"
 
 
 #include "text.h"
@@ -116,8 +117,9 @@ static void systems_init (ecs_world_t * world)
 	.move = ecs_move(Text)
 	});
 
-	/*
+
 	//Testing text system:
+
 	ecs_entity_t e1 = ecs_new (world, 0);
 	ecs_set (world, e1, Text, {"Lemon1"});
 	ecs_set (world, e1, Position3, {{0.0f, 0.0f, 0.0f}});
@@ -127,7 +129,8 @@ static void systems_init (ecs_world_t * world)
 	ecs_set (world, e2, Position3, {{0.0f, 0.5f, 1.0f}});
 	ecs_set (world, e2, Scale2, {{0.01f, 0.01f}});
 	printf ("e: %s\n", ecs_get (world, e1, Text)->value);
-	*/
+
+
 
 
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);
@@ -155,7 +158,25 @@ static void systems_init (ecs_world_t * world)
 	global_gcam.p.z = -1.0f;
 
 
-	gtext_context_init (&gtext_ctx, "consola.ttf", global_glprogram[GLPROGRAM_TEXT]);
+
+
+
+	FT_Library ft;
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
+	{
+		XLOG (XLOG_ERR, XLOG_GENERAL, "Could not init FreeType Library");
+		ASSERT(0);
+	}
+
+
+	if (FT_New_Face(ft, "consola.ttf", 0, &gtext_ctx.face))
+	{
+		XLOG (XLOG_ERR, XLOG_GENERAL, "Failed to load font");
+		ASSERT(0);
+	}
+	FT_Set_Pixel_Sizes (gtext_ctx.face, 0, 24);
+	gtext_context_init (&gtext_ctx, global_glprogram[GLPROGRAM_TEXT]);
 }
 
 
