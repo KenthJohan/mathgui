@@ -31,7 +31,7 @@ static void system_text_draw (ecs_iter_t *it)
 	uint32_t n = 0;
 	for (int32_t i = 0; i < it->count; ++i)
 	{
-		n += gtext_gen (pos + n, uv + n, text[i].value, gtext_ctx.c, 6*100, gtext_ctx.atlas.w, gtext_ctx.atlas.h, p[i].x, p[i].y, p[i].z, s[i].x, s[i].y);
+		n += gtext2_gen (pos + n, uv + n, text[i].value, gtext_ctx.c, 6*100, gtext_ctx.atlas.w, gtext_ctx.atlas.h, p[i].x, p[i].y, p[i].z, s[i].x, s[i].y);
 		//gtext_context_draw (&gtext_ctx, text[i].value, 0.0f, 0.0f, 2.0f / 400, 2.0f / 400, global_gcam.mvp.m);
 	}
 	glBindVertexArray (gtext_ctx.vao);

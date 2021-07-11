@@ -9,6 +9,8 @@
 #include "csc/csc_qf32.h"
 #include "csc/csc_xlog.h"
 #include "csc/csc_gft.h"
+#include "csc/experiment/gtext2.h"
+
 
 
 #include "text.h"
@@ -45,7 +47,7 @@ static GLint global_gluniform[GLUNIFORM_COUNT];
 static struct csc_gcam global_gcam;
 
 
-static struct gtext_context gtext_ctx;
+static struct gtext2_context gtext_ctx;
 
 
 
@@ -133,6 +135,7 @@ static void systems_init (ecs_world_t * world)
 
 
 
+
 	ECS_TRIGGER (world, trigger_transform, EcsOnAdd, Transform);
 	ECS_SYSTEM (world, system_transform_onset, EcsOnSet, Position4, Scale4, Quaternion, Transform);
 	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, Quaternion, $SDL_Keyboard);
@@ -176,7 +179,7 @@ static void systems_init (ecs_world_t * world)
 		ASSERT(0);
 	}
 	FT_Set_Pixel_Sizes (gtext_ctx.face, 0, 24);
-	gtext_context_init (&gtext_ctx, global_glprogram[GLPROGRAM_TEXT]);
+	gtext2_context_init (&gtext_ctx, global_glprogram[GLPROGRAM_TEXT]);
 }
 
 
