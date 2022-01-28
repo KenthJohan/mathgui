@@ -9,7 +9,7 @@ QMAKE_CFLAGS += -Wno-missing-braces
 QMAKE_CFLAGS += -Wno-unused-parameter
 QMAKE_CFLAGS += -Wno-missing-field-initializers
 
-DEFINES += CSC_SRCDIR=\\\"../mg/\\\"
+#DEFINES += CSC_SRCDIR=\\\"../../mg/\\\"
 #DEFINES += DEBUG
 
 HEADERS += csc/csc_gft.h

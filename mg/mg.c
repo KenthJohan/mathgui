@@ -298,8 +298,8 @@ int main (int argc, char * argv[])
 			switch (event.type)
 			{
 			case SDL_MOUSEWHEEL:{
-				global_gcam.fov += event.wheel.y * f32_deg_to_rad (10.0f);
-				global_gcam.fov = CLAMP(global_gcam.fov, f32_deg_to_rad (1.0f), f32_deg_to_rad (90.0f));
+				global_gcam.fov += (global_gcam.fov) * event.wheel.y * f32_deg_to_rad (10.0f);
+				global_gcam.fov = CLAMP(global_gcam.fov, f32_deg_to_rad (0.01f), f32_deg_to_rad (180.0f));
 				XLOG (XLOG_INF, XLOG_GENERAL, "fov %f", f32_rad_to_deg (global_gcam.fov));
 			}break;
 
@@ -346,8 +346,8 @@ int main (int argc, char * argv[])
 
 			if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))
 			{
-				global_gcam.pyr_delta.x = (float)mdlty * -0.1f;
-				global_gcam.pyr_delta.y = (float)mdltx * 0.1f;
+				global_gcam.pyr_delta.x = (float)mdlty * -0.1f * global_gcam.fov;
+				global_gcam.pyr_delta.y = (float)mdltx * 0.1f * global_gcam.fov;
 				//global_gcam.
 				//XLOG(XLOG_INF, "SDL_GetRelativeMouseState %i %i\n", mdltx, mdlty);
 				//SDL_ShowCursor(SDL_DISABLE);

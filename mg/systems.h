@@ -142,10 +142,10 @@ static void systems_init (ecs_world_t * world)
 	ECS_SYSTEM (world, system_apply_rotation, EcsOnUpdate, Quaternion, $SDL_Keyboard);
 	//ECS_SYSTEM (world, component_tbo_onadd, EcsMonitor, component_tbo);
 
-	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_pointcloud.glvs;"CSC_SRCDIR"shader_pointcloud.glfs");
-	global_glprogram[GLPROGRAM_LINE] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_line.glvs;"CSC_SRCDIR"shader_line.glfs");
-	global_glprogram[GLPROGRAM_MESH] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_image.glvs;"CSC_SRCDIR"shader_image.glfs");
-	global_glprogram[GLPROGRAM_TEXT] = csc_gl_program_from_files1 (CSC_SRCDIR"shader_text.glvs;"CSC_SRCDIR"shader_text.glfs");
+	global_glprogram[GLPROGRAM_POINT] = csc_gl_program_from_files1 ("shader_pointcloud.glvs;shader_pointcloud.glfs");
+	global_glprogram[GLPROGRAM_LINE] = csc_gl_program_from_files1 ("shader_line.glvs;shader_line.glfs");
+	global_glprogram[GLPROGRAM_MESH] = csc_gl_program_from_files1 ("shader_image.glvs;shader_image.glfs");
+	global_glprogram[GLPROGRAM_TEXT] = csc_gl_program_from_files1 ("shader_text.glvs;shader_text.glfs");
 	glLinkProgram (global_glprogram[GLPROGRAM_POINT]);
 	glLinkProgram (global_glprogram[GLPROGRAM_LINE]);
 	glLinkProgram (global_glprogram[GLPROGRAM_MESH]);
